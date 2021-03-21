@@ -11,7 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :covid_tweets_web, CovidTweetsWeb.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [scheme: "https", host: "warm-gorge-99554.herokuapp.com", port: 443],
+  url: [scheme: "https", host: "protected-refuge-98620.herokuapp.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 

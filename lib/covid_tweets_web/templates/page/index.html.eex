@@ -1,9 +1,0 @@
-<h2>Hello <%= @name %>!</h2>
-
-<%= form_for @conn, Routes.page_path(@conn, :index), fn f -> %>
-  <label>
-    Name: <%= text_input f, :name %>
-  </label>
-
-  <%= submit "Submit" %>
-<% end %>

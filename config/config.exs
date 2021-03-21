@@ -1,19 +1,26 @@
-# This file is responsible for configuring your application
-# and its dependencies with the aid of the Mix.Config module.
+# This file is responsible for configuring your umbrella
+# and **all applications** and their dependencies with the
+# help of Mix.Config.
 #
-# This configuration file is loaded before any dependency and
-# is restricted to this project.
-
-# General application configuration
+# Note that all applications in your umbrella share the
+# same configuration and dependencies, which is why they
+# all use the same configuration file. If you want different
+# configurations or dependencies per app, it is best to
+# move said applications out of the umbrella.
 use Mix.Config
 
+
+
+config :covid_tweets_web,
+  generators: [context_app: :covid_tweets]
+
 # Configures the endpoint
-config :covid_tweets, CovidTweetsWeb.Endpoint,
+config :covid_tweets_web, CovidTweetsWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "ASKFdTE8X5nehT2bif1A8L3x2fTsE8iTw0amV3sT66YHNAIwEubeqIxVs+f4OcZH",
+  secret_key_base: "4DyAFwK3Hy2QmYYbR02yH78PyZwwkG+4pH1wyhY9TxavZgGtHd/sTaE+oNfjB7KS",
   render_errors: [view: CovidTweetsWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: CovidTweets.PubSub,
-  live_view: [signing_salt: "7cpyPOrw"]
+  live_view: [signing_salt: "Vvbk3XMd"]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -22,6 +29,8 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :data, ecto_repos: [Data.Repo]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

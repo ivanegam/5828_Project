@@ -6,7 +6,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :covid_tweets, CovidTweetsWeb.Endpoint,
+config :covid_tweets_web, CovidTweetsWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -17,9 +17,16 @@ config :covid_tweets, CovidTweetsWeb.Endpoint,
       "--mode",
       "development",
       "--watch-stdin",
-      cd: Path.expand("../assets", __DIR__)
+      cd: Path.expand("../apps/covid_tweets_web/assets", __DIR__)
     ]
   ]
+
+config :data, Data.Repo,
+  database: "data_repo",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  size: 18
 
 # ## SSL Support
 #
@@ -46,7 +53,7 @@ config :covid_tweets, CovidTweetsWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :covid_tweets, CovidTweetsWeb.Endpoint,
+config :covid_tweets_web, CovidTweetsWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
@@ -59,9 +66,9 @@ config :covid_tweets, CovidTweetsWeb.Endpoint,
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
+# Initialize plugs at runtime for faster development compilation
+config :phoenix, :plug_init_mode, :runtime
+
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
-
-# Initialize plugs at runtime for faster development compilation
-config :phoenix, :plug_init_mode, :runtime

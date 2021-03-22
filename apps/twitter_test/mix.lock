@@ -1,0 +1,5 @@
+%{
+  "extwitter": {:hex, :extwitter, "0.12.2", "2cb458404e8b22f8c0b6f6180edc09101a41657ec41f29b3e2f7954cd45478ee", [:mix], [{:jason, "~> 1.1", [hex: :jason, repo: "hexpm", optional: false]}, {:oauther, "~> 1.1", [hex: :oauther, repo: "hexpm", optional: false]}], "hexpm", "ad9d09ab2e59f09df98c0382976b0191bb90486608e658407f00ea9277c72616"},
+  "jason": {:hex, :jason, "1.2.2", "ba43e3f2709fd1aa1dce90aaabfd039d000469c05c56f0b8e31978e03fa39052", [:mix], [{:decimal, "~> 1.0 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "18a228f5f0058ee183f29f9eae0805c6e59d61c3b006760668d8d18ff0d12179"},
+  "oauther": {:hex, :oauther, "1.1.1", "7d8b16167bb587ecbcddd3f8792beb9ec3e7b65c1f8ebd86b8dd25318d535752", [:mix], [], "hexpm", "9374f4302045321874cccdc57eb975893643bd69c3b22bf1312dab5f06e5788e"},
+}

@@ -58,16 +58,22 @@ defmodule CovidVaccines do
     defp ends_with_line_break?(data), do: String.match?(data, ~r/(\r?\n|\r)$/)
   end
 
+  def str_int(str) do
+    case str do
+      "" -> 0
+      _ -> elem(Integer.parse(str),0)
+    end
+  end
+
   def fetch_vaccinations do
-    url = "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/United%20States.csv"
+    url = "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
 
     RemoteCSV.stream(url)
     |> CSV.decode(headers: true)
     |> Enum.to_list
     |> Enum.map(fn {_, output} -> output end)
-    |> Enum.map(fn x -> {Date.from_iso8601!(x["date"]), elem(Integer.parse(x["total_vaccinations"]),0)} end)
-    |> Enum.chunk_every(2, 1, :discard)
-    |> Enum.map(fn [x, y] -> {elem(y,0), elem(y,1)-elem(x,1)} end)
+    |> Enum.filter(fn x -> x["iso_code"] == "USA" end)
+    |> Enum.map(fn x -> {Date.from_iso8601!(x["date"]), str_int(x["daily_vaccinations"])} end)
     |> Enum.into(%{})
   end
 

@@ -1,55 +1,16 @@
 defmodule CovidCases do
 
-  def fetch_cases(date) do
+  def get_cases() do
+    url = "https://data.cdc.gov/resource/9mfq-cb36.json?$limit=1000000"
 
-    %{body: body} = HTTPoison.get! cdc_url(date)
+    %{body: body} = HTTPoison.get! url
 
     decoded = Poison.decode! body
 
-    statecases = Enum.map(decoded, fn (x) -> x["new_case"] end)
-
-    statecasesNumeric = Enum.map(statecases, fn (x) -> (elem(Integer.parse(x),0)) end)
-
-    Enum.sum(statecasesNumeric)
-
-  end
-
-  def cdc_url(date) do
-    yy = date.year
-         |> Integer.to_string
-         |> String.pad_leading(4, "0")
-
-    mm = date.month
-         |> Integer.to_string
-         |> String.pad_leading(2, "0")
-
-    dd = date.day
-         |> Integer.to_string
-         |> String.pad_leading(2, "0")
-
-    "https://data.cdc.gov/resource/9mfq-cb36.json?submission_date=" <> yy <> "-" <> mm <> "-" <> dd <> "T00:00:00.000"
-  end
-
-  defmodule DailyCases do
-
-    @epistart ~D[2020-01-22]
-
-    def daily() do
-
-      dateDiff = Date.diff(Date.utc_today,@epistart)
-
-      dates = Enum.map(0..dateDiff, &Date.add(@epistart, &1))
-
-      dailyCases = Enum.reduce dates, %{}, fn x, acc ->
-        Map.put(acc, x, CovidCases.fetch_cases(x))
-      end
-
-      dailyCases
-
+    for %{"submission_date" => submission_date, "new_case" => new_case} <- decoded, reduce: %{} do
+      acc -> Map.update(acc, Date.from_iso8601!(String.slice(submission_date,0,10)), elem(Integer.parse(new_case),0), & &1 + elem(Integer.parse(new_case),0))
     end
+
   end
 
-  def hello do
-    :world
-  end
 end

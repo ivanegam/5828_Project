@@ -21,8 +21,6 @@ let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("
 
 
 
-// Math.round(christmas_day.getTime() - present_date.getTime()) / (one_day);
-
 
 // ----- Chart.js Graph, graph doesn't render -----
 let hooks = {}
@@ -34,12 +32,12 @@ hooks.chart = {
             type: 'line',
             // The data for our dataset
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels: [],
                 datasets: [{
-                    label: 'My First dataset',
+                    label: 'Dates',
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
-                    data: [0, 10, 5, 2, 20, 30, 45]
+                    data: []
                 }]
             },
             // Configuration options go here
@@ -47,9 +45,48 @@ hooks.chart = {
         });
 
         
-        this.handleEvent("dates", ({points}) => {
+        this.handleEvent("points", ({points}) => {
           chart.data.datasets[0].data = points
           chart.update()
+        })
+
+
+
+        function parseDate(str) {
+            var yyyy_mm_dd = str.split('-');
+            return new Date(yyyy_mm_dd[0], yyyy_mm_dd[1]-1, yyyy_mm_dd[2]);
+        }
+
+        Date.prototype.addDays = function(days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
+        }
+
+        function getDates(startDate, stopDate) {
+            var dateArray = new Array();
+            var currentDate = startDate;
+            while (currentDate <= stopDate) {
+                dateArray.push(new Date (currentDate));
+                currentDate = currentDate.addDays(1);
+            }
+            return dateArray;
+        }
+
+
+
+        this.handleEvent("dates", ({start_date, end_date}) => {
+            var dates = getDates(parseDate(start_date), parseDate(end_date));
+            var date_strings = new Array()
+            for (var i = 0; i < dates.length; i++) {
+                date_strings.push(dates[i].toDateString());
+            }
+
+
+            chart.data.labels = date_strings;//[...Array(array_test.length).keys()];//
+            // chart.labels = [...Array(labels.length).keys()]
+            chart.data.datasets[0].data = [...Array(date_strings.length).keys()]; //new Array(labels.length).fill(1);
+            chart.update();
         })
     }
 }
@@ -77,4 +114,4 @@ liveSocket.enableDebug()
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
-// window.liveSocket = liveSocket
+window.liveSocket = liveSocket

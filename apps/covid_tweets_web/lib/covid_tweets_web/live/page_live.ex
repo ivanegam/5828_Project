@@ -3,20 +3,12 @@ defmodule CovidTweetsWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    IO.inspect(connected?(socket), label: "CONNTECTION STATUS")
     {:ok, socket}
   end
 
-  @impl true
-  def handle_event("next", _, socket) do
-    {:noreply, socket |> push_event("points", %{points: get_points()})}
+  def handle_event("change_date", %{"start_date" => sd, "end_date"=>ed}, socket) do
+    # IO.puts("Called with 1: #{inspect sd} #{inspect ed}")
+    {:noreply, socket |> push_event("dates", %{"start_date": sd, "end_date": ed})}
   end
-
-  @impl true
-  def handle_event("start_date", %{"params" => params}, socket) do
-    IO.puts(params)
-  end
-
-  defp get_points, do: 1..7 |> Enum.map(fn _ -> :rand.uniform(100) end)
 
 end

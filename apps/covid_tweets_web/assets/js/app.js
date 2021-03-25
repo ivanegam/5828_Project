@@ -19,6 +19,12 @@ import {LiveSocket} from "phoenix_live_view"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
+
+
+// Math.round(christmas_day.getTime() - present_date.getTime()) / (one_day);
+
+
+// ----- Chart.js Graph, graph doesn't render -----
 let hooks = {}
 hooks.chart = {
     mounted() {
@@ -41,32 +47,19 @@ hooks.chart = {
         });
 
         
-        this.handleEvent("points", ({points}) => {
+        this.handleEvent("dates", ({points}) => {
           chart.data.datasets[0].data = points
           chart.update()
         })
     }
 }
+// --- End of Graph.js code --- 
 
 
-// var ctx = document.getElementById('myChart').getContext('2d');
-// window.alert(ctx);
-// var chart = new Chart(ctx, {
-//     // The type of chart we want to create
-//     type: 'line',
-//     // The data for our dataset
-//     data: {
-//         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-//         datasets: [{
-//             label: 'My First dataset',
-//             backgroundColor: 'rgb(255, 99, 132)',
-//             borderColor: 'rgb(255, 99, 132)',
-//             data: [0, 10, 5, 2, 20, 30, 45]
-//         }]
-//     },
-//     // Configuration options go here
-//     options: {}
-// });
+
+
+
+
 
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})
 
@@ -77,6 +70,8 @@ window.addEventListener("phx:page-loading-stop", info => topbar.hide())
 
 // connect if there are any LiveViews on the page
 liveSocket.connect()
+
+liveSocket.enableDebug()
 
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()

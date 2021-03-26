@@ -1,6 +1,24 @@
 # TwitterTest
 
-**TODO: Add description**
+# Ubuntu installation
+wget https://packages.erlang-solutions.com
+wget erlang-solutions_2.0_all.deb && sudo dpkg -i erlang-solutions_2.0_all.deb
+sudo apt-get install esl-erlang
+sudo apt-get install elixir
+
+
+# Starting a new project
+mix new <name of project>
+# Add hex package manager
+mix local.hex
+# add extwitter
+once added to the mix.exs
+mix deps.get
+
+# run program
+mix compile
+mix run
+
 
 ## Installation
 
@@ -18,4 +36,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/twitter_test](https://hexdocs.pm/twitter_test).
-

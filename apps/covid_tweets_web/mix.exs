@@ -47,6 +47,7 @@ defmodule CovidTweetsWeb.MixProject do
       {:covid_tweets, in_umbrella: true},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      {:timex, "~> 3.0"},
       {:data, in_umbrella: true} # depends on the Data app for persistence
     ]
   end

@@ -8,3 +8,10 @@ config :covid_tweets_web, CovidTweetsWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :data, Data.Repo,
+  database: "data_repo_test",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  pool: Ecto.Adapters.SQL.Sandbox

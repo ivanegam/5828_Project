@@ -1,16 +1,13 @@
-<table>
-  <tr>
-    <th><b>Time</b></th>
-    <th><b>Location</b></th>
-    <th><b>Content</b></th>
-    <th><b>Hashtags</b></th>
-  </tr>
-<%= for tweet <- @tweets do %>
-  <tr>
-    <th><%= tweet.time %></th>
-    <th><%= tweet.location %></th>
-    <th><%= tweet.content %></th>
-    <th><%= tweet.hashtags %></th>
-  </tr>
-<% end %>
-</table>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="area">
+      <div class="twitter-logo">
+        <img src="<%= Routes.static_path(@conn, "/images/twitter-logo-blue.png") %>" alt="twitter"/>
+      </div>
+      <h2><%= gettext "Top Tweets" %></h2>
+    </div>
+    <%= for tweet <- @tweets do %>
+      <%= render CovidTweetsWeb.TweetDisplayView, "single_tweet.html", conn: @conn, tweet: tweet %>
+    <% end %>
+  </div>
+</div>

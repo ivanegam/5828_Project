@@ -1,8 +1,7 @@
 defmodule Pollers.TweetPoller do
   use Task
 
-  #@poll_milliseconds 86_400_000
-  @poll_milliseconds 10_000
+  @poll_milliseconds 60_000
 
   def start_link(_arg) do
     Task.start_link(&poll/0)

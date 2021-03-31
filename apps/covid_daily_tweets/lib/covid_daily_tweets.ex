@@ -4,10 +4,10 @@ defmodule CovidDailyTweets do
 
     def configure() do
       ExTwitter.configure(
-        [consumer_key: "9EXrt3HoqfOvMyBbEmN1MSG0D",
-          consumer_secret: "HzTTqk40LZ1mzgi8sXNOtV3YVrst2Vm8JUSd4DdtDup0YRfeYo",
-          access_token: "949636492040818688-otM3KBD7G9PsfWSufhO6pzRkAFh0V67",
-          access_token_secret: "2kY8NZ3QawgR5aNmJJs7jNzxye08ipCNWTejJUgh8wi8c"])
+        [consumer_key: "",
+          consumer_secret: "",
+          access_token: "",
+          access_token_secret: ""])
     end
 
     def getDailyTweets(keyword) do

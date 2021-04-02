@@ -10,44 +10,58 @@ defmodule CovidDailyTweets do
           access_token_secret: ""])
     end
 
-    def getDailyTweets(keyword) do
-      #Fetch initial page of Twitter search results for a given keyword,
-      #Excluding retweets,
-      #BY authors residing IN, or tweeted FROM 80-mi radius of Denver
+    def getYesterdayDenver() do
+      #Get yesterday's date (Denver time)
 
-      response = ExTwitter.search(keyword, [result_type: "recent", include_entities: true, count: 100, search_metadata: true, geocode: "39.7642548,-104.9951964,80mi", exclude: "retweets"])
-
-      #Append other pages of search results, as many as available
-
-      getNext(response) |>
-        Enum.drop(-3)
+      {:ok, nowDenver} = DateTime.shift_zone(DateTime.utc_now, "America/Denver")
+      todayDenver = DateTime.to_date(nowDenver)
+      Date.add(todayDenver,-1)
     end
 
-    def getNext(response) when is_nil(response) do
-      [nil]
+    def getDailyTweets(keyword) do
+      configure()
+
+      #Fetch initial page of Twitter search results for a given keyword,
+      #Excluding retweets,
+      #BY authors residing IN, or tweeted FROM 80-mi radius of Denver,
+      #Since yesterday (UTC)
+
+      response = ExTwitter.search(keyword, [result_type: "recent", include_entities: true, count: 100, search_metadata: true, geocode: "39.7642548,-104.9951964,80mi", exclude: "retweets", since: Date.to_iso8601(getYesterdayDenver())])
+
+      #Append remaining pages of search results, if any
+      cond do
+        Map.has_key?(response.metadata, :next_results) ->
+          getNext(response)
+        true ->
+          [response]
+      end
     end
 
     def getNext(response) do
-      #Get next page of search results, until nil
+      #Recursively append remaining pages of search results
 
       next = ExTwitter.search_next_page(response.metadata)
 
-      [next] ++ getNext(next)
+      cond do
+        Map.has_key?(next.metadata, :next_results) ->
+          [next] ++ getNext(next)
+        true ->
+          [next]
+      end
     end
 
-    def getHashtag(statuses) do
-      # Get first hashtag associated with a tweet. If no hashtags, return ""
+    def getHashtag([]) do
+      ""
+    end
 
-      cond do
-        statuses.entities.hashtags == [] -> ""
-        true -> Enum.fetch!(statuses.entities.hashtags,0).text
-      end
+    def getHashtag([head|_tail]) do
+      head.text
     end
 
     def parseTime(timeStr) do
       #Parse tweet timestamp provided by Twitter API, convert to Denver timezone
 
-      dateTime = Timex.parse!(timeStr, "%a %b %d %T %z %Y", :strftime)
+      {:ok, dateTime} = Timex.parse(timeStr, "%a %b %d %T %z %Y", :strftime)
 
       {:ok, dateTimeDenver} = DateTime.shift_zone(dateTime, "America/Denver")
 
@@ -57,25 +71,18 @@ defmodule CovidDailyTweets do
     def dateTimeIsYesterday(dateTime) do
       #Check if a datetime (in Denver time) is yesterday (in Denver time)
 
-      {:ok, nowDenver} = DateTime.shift_zone(DateTime.utc_now, "America/Denver")
-
-      todayDenver = DateTime.to_date(nowDenver)
-
-      yesterdayDenver = Date.add(todayDenver,-1)
-
-      DateTime.to_date(dateTime) == yesterdayDenver
+      Date.compare(DateTime.to_date(dateTime), getYesterdayDenver()) == :eq
     end
 
     def tweetdata_yesterday(keyword) do
-      #Fetch tweet data for yesterday for a given keyword, from all pages of search results since "yesterday" may
-      #span multiple pages
-
-      configure()
+      #Fetch tweet data for yesterday (UTC) for a given keyword,
+      #from all pages of search results since "yesterday" may span multiple pages,
+      #further filter to "yesterday" relative to Denver time
 
       for x <- getDailyTweets(keyword) do
         x.statuses |>
           Enum.filter(fn x -> dateTimeIsYesterday(parseTime(x.created_at)) end) |>
-          Enum.map(fn x -> {x.id_str, parseTime(x.created_at), x.user.screen_name, x.text, x.retweet_count, getHashtag(x), x.user.name, x.user.profile_image_url_https} end)
+          Enum.map(fn x -> %{time: parseTime(x.created_at), name: x.user.name, screen_name: x.user.screen_name, profile_image_url: x.user.profile_image_url_https, text: x.text, hashtags: getHashtag(x.entities.hashtags), retweet_count: x.retweet_count} end)
       end |>
         List.flatten()
     end
@@ -92,7 +99,7 @@ defmodule CovidDailyTweets do
       excludedHashtags = ["", "VACCINE", "VACCINATION", "COVID", "COVID19", "COVID_19", "COVIDVACCINE"]
 
       tweetdata |>
-        Enum.map(fn x -> elem(x,5) end) |>
+        Enum.map(fn x -> x.hashtags end) |>
         Enum.filter(fn x -> !Enum.member?(excludedHashtags,String.upcase(x)) end) |>
         Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end) |>
         Enum.sort_by(&(elem(&1, 1)), :desc) |>
@@ -103,8 +110,7 @@ defmodule CovidDailyTweets do
       #Get most retweeted tweets from tweet data
 
       tweetdata |>
-        #Enum.filter(fn x -> String.slice(elem(x,3), 0..3) != "RT @" end) |>
-        Enum.sort_by(&(elem(&1, 4)), :desc) |>
+        Enum.sort_by(fn(tweet) -> tweet.retweet_count end, :desc) |>
         Enum.take(5)
     end
 

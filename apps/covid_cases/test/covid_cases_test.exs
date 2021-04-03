@@ -3,7 +3,7 @@ defmodule CovidCasesTest do
   doctest CovidCases
 
   test "cases on jan 21 2021" do
-    assert CovidCases.get_cases[~D[2021-01-21]] == 189633
+    assert CovidCases.get_cases[~D[2021-01-21]] == 189794
   end
 
 end

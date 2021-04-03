@@ -1,5 +1,12 @@
 /* This file is for your main application css. */
-@import "./phoenix.css";
+//@import "./phoenix.css";
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+$background-color: #f5f8fa;
+$text-color-dark: #aab8c2;
+$area-bg-color: rgb(255, 255, 255);
+$area-border-color: #e1e8ed;
+$area-border: 1px solid $area-border-color;
 
 /* Alerts and form errors */
 .alert {
@@ -28,4 +35,72 @@
 }
 .alert:empty {
   display: none;
+}
+
+/* Page CSS */
+body {
+  margin-top: 20px;
+  background-color: $background-color;
+}
+
+.alert:empty {
+  display: none;
+}
+
+.tweet-data-text {
+  color: $text-color-dark;
+}
+
+/* Tweet Display */
+.area {
+  background-color: $area-bg-color;
+  border: $area-border;
+  border-bottom: 0;
+  padding: 10px;
+  font-size: 125%;
+  width: 800px;
+
+  &:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+
+  &:last-child {
+    border-bottom: $area-border;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .twitter-logo {
+    img {
+      width: 30px;
+      margin-right: 20px;
+      margin-top: 10px;
+      @extend .float-left;
+    }
+  }
+
+  .meta {
+    .name {
+      color: black;
+      font-weight: bold;
+    }
+  }
+
+  .text {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+.profile-picture {
+  @extend .float-left;
+  margin-right: 12px;
+  border-radius: 8px;
+  border: 1px solid $area-border-color;
+}
+
+.media-left {
+  padding-right: 0px;
 }

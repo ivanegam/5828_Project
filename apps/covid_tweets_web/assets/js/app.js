@@ -13,6 +13,7 @@ import "../css/app.scss"
 //     import socket from "./socket"
 //
 import "phoenix_html"
+import 'bootstrap';
 import {Socket} from "phoenix"
 import topbar from "topbar"
 import {LiveSocket} from "phoenix_live_view"

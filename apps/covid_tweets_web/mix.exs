@@ -14,6 +14,7 @@ defmodule CovidTweetsWeb.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps()
     ]
   end
@@ -49,6 +50,7 @@ defmodule CovidTweetsWeb.MixProject do
       {:covid_tweets, in_umbrella: true},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      {:timex, "~> 3.0"},
       {:data, in_umbrella: true} # depends on the Data app for persistence
     ]
   end
@@ -58,7 +60,8 @@ defmodule CovidTweetsWeb.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"]
+      setup: ["deps.get", "cmd npm install --prefix assets"],
+      test: ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end

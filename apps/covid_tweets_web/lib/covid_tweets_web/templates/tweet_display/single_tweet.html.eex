@@ -1,0 +1,18 @@
+<div class="area">
+  <div class="media">
+    <div class="media-left">
+      <img class="profile-picture" src="<%= @tweet.profile_image_url %>" width="45" height="45">
+    </div>
+    <div class="media-body">
+      <div class="meta">
+        <span class="name"><%= @tweet.name %></a></span>
+        <span class="tweet-data-text">@<%= @tweet.screen_name %></span>
+        <span class="tweet-data-text"><%= format_datetime(@tweet.time) %></span>
+      </div>
+
+      <div class="text">
+        <%= @tweet.text %>
+      </div>
+    </div>
+  </div>
+</div>

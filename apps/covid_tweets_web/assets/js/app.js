@@ -25,7 +25,7 @@ let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("
 
 // ----- Chart.js Graph, graph doesn't render -----
 let hooks = {}
-hooks.chart = {
+hooks.covid_chart = {
     mounted() {
         var ctx = this.el.getContext('2d');
         var chart = new Chart(ctx, {
@@ -45,58 +45,16 @@ hooks.chart = {
             options: {}
         });
 
-        
-        this.handleEvent("points", ({points}) => {
-          chart.data.datasets[0].data = points
-          chart.update()
-        })
-
-
-
-        function parseDate(str) {
-            var yyyy_mm_dd = str.split('-');
-            return new Date(yyyy_mm_dd[0], yyyy_mm_dd[1]-1, yyyy_mm_dd[2]);
-        }
-
-        Date.prototype.addDays = function(days) {
-            var date = new Date(this.valueOf());
-            date.setDate(date.getDate() + days);
-            return date;
-        }
-
-        function getDates(startDate, stopDate) {
-            var dateArray = new Array();
-            var currentDate = startDate;
-            while (currentDate <= stopDate) {
-                dateArray.push(new Date (currentDate));
-                currentDate = currentDate.addDays(1);
-            }
-            return dateArray;
-        }
-
-
-
-        this.handleEvent("dates", ({start_date, end_date}) => {
-            var dates = getDates(parseDate(start_date), parseDate(end_date));
-            var date_strings = new Array()
-            for (var i = 0; i < dates.length; i++) {
-                date_strings.push(dates[i].toDateString());
-            }
-
-
-            chart.data.labels = date_strings;//[...Array(array_test.length).keys()];//
-            // chart.labels = [...Array(labels.length).keys()]
-            chart.data.datasets[0].data = [...Array(date_strings.length).keys()]; //new Array(labels.length).fill(1);
+        this.handleEvent("update_covid_chart", ({dates, counts}) => {
+            chart.data.labels = dates
+            chart.data.datasets[0].data = counts
             chart.update();
         })
     }
 }
+
+
 // --- End of Graph.js code --- 
-
-
-
-
-
 
 
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}, hooks})

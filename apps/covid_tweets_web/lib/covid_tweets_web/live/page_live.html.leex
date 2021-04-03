@@ -1,5 +1,5 @@
 <div phx-update="ignore">
-  <canvas id="myChart" phx-hook="chart"></canvas>
+  <canvas id="covid_chart" phx-hook="covid_chart"></canvas>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
@@ -7,12 +7,12 @@
 <form phx-submit="change_date">
   <label for="start">Start date:</label>
   <input type="date" id="start_date" name="start_date"
-         value="2021-03-01"
+         value="<%= @first_day %>"
          min="2021-03-01" max="2021-06-30">
 
   <label for="end">End date:</label>
   <input type="date" id="end_date" name="end_date"
-         value="2021-06-30"
+         value="<%= @today %>"
          min="2021-03-01" max="2021-06-30">
 
   <input type="submit" value="Update Chart">

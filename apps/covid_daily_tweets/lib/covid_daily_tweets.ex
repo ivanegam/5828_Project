@@ -5,9 +5,9 @@ defmodule CovidDailyTweets do
     def configure() do
       ExTwitter.configure(
         [consumer_key: "",
-          consumer_secret: "",
-          access_token: "",
-          access_token_secret: ""])
+        consumer_secret: "",
+        access_token: "",
+        access_token_secret: "" ])
     end
 
     def getYesterdayDenver() do
@@ -119,9 +119,9 @@ defmodule CovidDailyTweets do
 
       tweetdata = tweetdata_yesterday(keyword)
 
-      %{counts: tweetcount_yesterday(tweetdata), hashtags: common_hashtags_yesterday(tweetdata), retweeteds: most_retweeted_yesterday(tweetdata)}
-      daily = %Data.DailyCount{count: tweetcount_yesterday(tweetdata)}
-      IO.puts(daily.count)
+      #%{counts: tweetcount_yesterday(tweetdata), hashtags: common_hashtags_yesterday(tweetdata), retweeteds: most_retweeted_yesterday(tweetdata)}
+      daily = %Data.DailyCount{count: tweetcount_yesterday(tweetdata), label: :covid_tweets, date: Date.utc_today}
+      Data.Repo.insert(daily)
     end
 
 end

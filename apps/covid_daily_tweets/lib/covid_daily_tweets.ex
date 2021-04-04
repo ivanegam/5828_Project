@@ -120,6 +120,8 @@ defmodule CovidDailyTweets do
       tweetdata = tweetdata_yesterday(keyword)
 
       %{counts: tweetcount_yesterday(tweetdata), hashtags: common_hashtags_yesterday(tweetdata), retweeteds: most_retweeted_yesterday(tweetdata)}
+      daily = %Data.DailyCount{count: tweetcount_yesterday(tweetdata)}
+      IO.puts(daily.count)
     end
 
 end

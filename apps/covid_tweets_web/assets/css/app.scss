@@ -1,6 +1,6 @@
 /* This file is for your main application css. */
 //@import "./phoenix.css";
-  @import "../node_modules/bootstrap/scss/bootstrap";
+@import "../node_modules/bootstrap/scss/bootstrap";
 
 $background-color: #f5f8fa;
 $text-color-dark: #aab8c2;
@@ -116,4 +116,10 @@ body {
   margin-right: auto;
   margin-left: auto;
   max-width: 10000px
+}
+
+.row {
+  margin-left: 10px;
+  margin-right: auto;
+  width: 50%;
 }

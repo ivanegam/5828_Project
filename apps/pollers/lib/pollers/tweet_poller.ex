@@ -1,7 +1,7 @@
 defmodule Pollers.TweetPoller do
   use Task
 
-  @poll_milliseconds 60_000
+  @poll_milliseconds 3_600_000
 
   def start_link(_arg) do
     Task.start_link(&poll/0)
@@ -35,7 +35,7 @@ defmodule Pollers.TweetPoller do
     }
 
     # Insert into database
-    case Data.insert_tweet_rolling(tweet) do
+    case Data.insert_tweet(tweet) do
       {:ok, _tweet} ->
         IO.puts "Successfully processed tweet"
       {:error, changeset} ->

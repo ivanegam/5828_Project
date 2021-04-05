@@ -50,12 +50,9 @@ defmodule CovidDailyTweets do
       end
     end
 
-    def getHashtag([]) do
-      ""
-    end
-
-    def getHashtag([head|_tail]) do
-      head.text
+    def getHashtag(hashtags) do
+      hashtags |>
+      Enum.map(fn x -> x.text end)
     end
 
     def parseTime(timeStr) do
@@ -96,13 +93,16 @@ defmodule CovidDailyTweets do
     def common_hashtags_yesterday(tweetdata) do
       #Get hashtags from tweet data
 
-      excludedHashtags = ["", "VACCINE", "VACCINATION", "COVID", "COVID19", "COVID_19", "COVIDVACCINE"]
+      excludedHashtags = ["", "VACCINE", "VACCINATION", "COVID", "COVID19", "COVID_19", "COVIDVACCINE", "CORONAVIRUS"]
 
       tweetdata |>
         Enum.map(fn x -> x.hashtags end) |>
+        List.flatten() |>
+        Enum.map(fn x -> String.downcase(x) end) |>
         Enum.filter(fn x -> !Enum.member?(excludedHashtags,String.upcase(x)) end) |>
         Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end) |>
-        Enum.sort_by(&(elem(&1, 1)), :desc) |>
+        Enum.filter(fn {_k, v} -> v > 1 end) |>
+        Enum.sort_by(&elem(&1, 1), :desc) |>
         Enum.map(fn x -> "#" <> elem(x,0) <> " " <> "(" <> to_string(elem(x, 1)) <> ")" end)
     end
 

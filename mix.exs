@@ -4,6 +4,7 @@ defmodule CovidTweets.Umbrella.MixProject do
   def project do
     [
       apps_path: "apps",
+      apps: [:covid_cases, :covid_daily_tweets, :covid_tweets, :covid_tweets_web, :covid_vaccines, :data, :pollers],
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),

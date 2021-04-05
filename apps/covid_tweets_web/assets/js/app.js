@@ -28,6 +28,63 @@ let hooks = {}
 hooks.covid_chart = {
     mounted() {
         var ctx = this.el.getContext('2d');
+                var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+            // The data for our dataset
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Daily Covid Case Count',
+                    yAxisID: 'covid',
+                    backgroundColora: 'rgb(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: []
+                },
+                {
+                    label: 'Daily Covid Tweet Count',
+                    yAxisID: 'tweets',
+                    backgroundColor: 'rgba(255, 132, 99, 0.2)',
+                    borderColor: 'rgb(255, 132, 99)',
+                    data: []
+                }]
+            },
+            // Configuration options go here
+            options: {
+                scales: {
+                  yAxes: [{
+                    id: 'covid',
+                    type: 'linear',
+                    position: 'left',
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Daily Covid Case Count'
+                    }
+                  }, {
+                    id: 'tweets',
+                    type: 'linear',
+                    position: 'right',
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Daily Covid Tweet Count'
+                    }
+                  }]
+                }
+              }
+        });
+
+        this.handleEvent("update_covid_chart", ({dates, covid_counts, tweet_counts}) => {
+            chart.data.labels = dates
+            chart.data.datasets[0].data = covid_counts;
+            chart.data.datasets[1].data = tweet_counts;
+            chart.update();
+        })
+    }
+}
+
+hooks.vaccine_chart = {
+    mounted() {
+        var ctx = this.el.getContext('2d');
         var chart = new Chart(ctx, {
             // The type of chart we want to create
             type: 'line',
@@ -35,25 +92,52 @@ hooks.covid_chart = {
             data: {
                 labels: [],
                 datasets: [{
-                    label: 'Dates',
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
+                    label: 'Daily Number of Administered Vaccines',
+                    yAxisID: 'vaccines',
+                    backgroundColora: 'rgb(132, 99, 255, 0.2)',
+                    borderColor: 'rgb(132, 99, 255)',
+                    data: []
+                },
+                {
+                    label: 'Daily Vaccine Tweet Count',
+                    yAxisID: 'tweets',
+                    backgroundColor: 'rgba(99, 132, 255, 0.2)',
+                    borderColor: 'rgb(99, 132, 255)',
                     data: []
                 }]
             },
             // Configuration options go here
-            options: {}
+            options: {
+                scales: {
+                  yAxes: [{
+                    id: 'vaccines',
+                    type: 'linear',
+                    position: 'left',
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Daily Number of Administered Vaccines'
+                    }
+                  }, {
+                    id: 'tweets',
+                    type: 'linear',
+                    position: 'right',
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Daily Vaccine Tweet Count'
+                    }
+                  }]
+                }
+              }
         });
 
-        this.handleEvent("update_covid_chart", ({dates, counts}) => {
-            chart.data.labels = dates
-            chart.data.datasets[0].data = counts
+        this.handleEvent("update_vaccine_chart", ({dates, vaccine_counts, tweet_counts}) => {
+            chart.data.labels = dates;
+            chart.data.datasets[0].data = vaccine_counts;
+            chart.data.datasets[1].data = tweet_counts;
             chart.update();
         })
     }
 }
-
-
 // --- End of Graph.js code --- 
 
 

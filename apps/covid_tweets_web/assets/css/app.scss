@@ -1,6 +1,6 @@
 /* This file is for your main application css. */
 //@import "./phoenix.css";
-@import "../node_modules/bootstrap/scss/bootstrap";
+  @import "../node_modules/bootstrap/scss/bootstrap";
 
 $background-color: #f5f8fa;
 $text-color-dark: #aab8c2;
@@ -103,4 +103,17 @@ body {
 
 .media-left {
   padding-right: 0px;
+}
+
+.chart_panel {
+  display: inline-block;
+  width: 48%;
+}
+
+.container {
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 10000px
 }

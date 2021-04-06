@@ -1,19 +1,42 @@
-<div phx-update="ignore">
-  <canvas id="myChart" phx-hook="chart"></canvas>
+<div style="width: 100%">
+  <div class="chart_panel">
+    <div phx-update="ignore">
+      <canvas id="covid_chart" phx-hook="covid_chart"></canvas>
+    </div>
+
+    <form phx-submit="change_date_covid">
+        <label for="start">Start date:</label>
+        <input type="date" id="start_date" name="start_date"
+               value="<%= @first_day %>"
+               min="2021-03-01" max="2021-06-30">
+
+        <label for="end">End date:</label>
+        <input type="date" id="end_date" name="end_date"
+               value="<%= @today %>"
+               min="2021-03-01" max="2021-06-30">      
+      <input type="submit" value="Update Chart">
+      
+    </form>
+  </div>
+
+  <div class="chart_panel">
+    <div phx-update="ignore">
+      <canvas id="vaccine_chart" phx-hook="vaccine_chart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <form phx-submit="change_date_vaccine">
+        <label for="start">Start date:</label>
+        <input type="date" id="start_date" name="start_date"
+               value="<%= @first_day %>"
+               min="2021-03-01" max="2021-06-30">
+
+        <label for="end">End date:</label>
+        <input type="date" id="end_date" name="end_date"
+               value="<%= @today %>"
+               min="2021-03-01" max="2021-06-30">
+
+      <input type="submit" value="Update Chart">
+    </form>
+  </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-
-
-<form phx-submit="change_date">
-  <label for="start">Start date:</label>
-  <input type="date" id="start_date" name="start_date"
-         value="2021-03-01"
-         min="2021-03-01" max="2021-06-30">
-
-  <label for="end">End date:</label>
-  <input type="date" id="end_date" name="end_date"
-         value="2021-06-30"
-         min="2021-03-01" max="2021-06-30">
-
-  <input type="submit" value="Update Chart">
-</form>

@@ -104,3 +104,22 @@ body {
 .media-left {
   padding-right: 0px;
 }
+
+.chart_panel {
+  display: inline-block;
+  width: 48%;
+}
+
+.container {
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 10000px
+}
+
+.row {
+  margin-left: 10px;
+  margin-right: auto;
+  width: 50%;
+}

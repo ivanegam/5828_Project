@@ -1,5 +1,7 @@
 defmodule CovidVaccines do
 
+  @default_config Application.get_env(:covid_vaccines, :csv_reader)
+
   ### Source for fetching a hosted CSV file: https://blog.agilion.com/decoding-a-hosted-csv-file-in-elixir-7aa0bb3f7468
 
   Application.ensure_all_started(:hackney)
@@ -18,6 +20,7 @@ defmodule CovidVaccines do
     end
 
     defp continue_stream(:halt), do: {:halt, []}
+
     defp continue_stream({ref, partial_row}) do
       case :hackney.stream_body(ref) do
         {:ok, data} ->
@@ -58,23 +61,43 @@ defmodule CovidVaccines do
     defp ends_with_line_break?(data), do: String.match?(data, ~r/(\r?\n|\r)$/)
   end
 
-  def str_int(str) do
+  defp str_int(str) do
     case str do
       "" -> 0
       _ -> elem(Integer.parse(str),0)
     end
   end
 
-  def fetch_vaccinations do
-    url = "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
+  def process_covid_vaccines(config \\ @default_config) do
+    #Process CSV file fetched by the CSV reader
 
-    RemoteCSV.stream(url)
-    |> CSV.decode(headers: true)
-    |> Enum.to_list
+    config.fetch_vaccinations()
     |> Enum.map(fn {_, output} -> output end)
     |> Enum.filter(fn x -> x["iso_code"] == "USA" end)
     |> Enum.map(fn x -> {Date.from_iso8601!(x["date"]), str_int(x["daily_vaccinations"])} end)
     |> Enum.into(%{})
+
+  end
+
+  defmodule CSVReader do
+    #Define CSVReader behaviour, making sure the real and test CSV readers conform to the same interface
+
+    @callback fetch_vaccinations() :: list()
+  end
+
+  defmodule CSVReader.Reader do
+
+    @behaviour CSVReader
+
+    @impl CSVReader
+    def fetch_vaccinations() do
+      url = "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
+
+      RemoteCSV.stream(url)
+      |> CSV.decode(headers: true)
+      |> Enum.to_list
+    end
+
   end
 
 end

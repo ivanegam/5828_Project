@@ -15,3 +15,9 @@ config :data, Data.Repo,
   password: "postgres",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+#Config for test HTTP client
+config :covid_cases, :cdc_api, CovidCases.CDCAPI.MockClient
+
+#Config for test CVS reader
+config :covid_vaccines, :csv_reader, CovidVaccines.CSVReader.MockReader

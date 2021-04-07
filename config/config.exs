@@ -38,3 +38,9 @@ import_config "#{Mix.env()}.exs"
 
 #Config for timezone database
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
+#Config for the real HTTP client
+config :covid_cases, :cdc_api, CovidCases.CDCAPI.HttpClient
+
+#Config for the real CSV reader
+config :covid_vaccines, :csv_reader, CovidVaccines.CSVReader.Reader

@@ -42,7 +42,7 @@ defmodule CovidTweets.Umbrella.MixProject do
     [
       # run `mix setup` in all child apps
       setup: ["cmd mix setup"],
-      test: ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate", "test --no-start"]
     ]
   end
 end

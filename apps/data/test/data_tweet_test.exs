@@ -13,7 +13,8 @@ defmodule DataTweetTest do
       profile_image_url: "https://www.testdomain.com/image.png",
       text: "Test tweet.",
       hashtags: ["#covid19", "#another"],
-      retweet_count: 12
+      retweet_count: 12,
+      label: :covid_tweets
     }
 
     # Insert tweet
@@ -27,6 +28,7 @@ defmodule DataTweetTest do
     assert ret.text == tweet.text
     assert ret.hashtags == tweet.hashtags
     assert ret.retweet_count == tweet.retweet_count
+    assert ret.label == tweet.label
 
     # Retrieve tweet
     query = from t in Data.Tweet,
@@ -43,6 +45,7 @@ defmodule DataTweetTest do
       assert q_tweet.text == tweet.text
       assert q_tweet.hashtags == tweet.hashtags
       assert q_tweet.retweet_count == tweet.retweet_count
+      assert q_tweet.label == tweet.label
   end
 
   test "error on inserting tweet with missing data" do
@@ -54,7 +57,8 @@ defmodule DataTweetTest do
       profile_image_url: "https://www.testdomain.com/image.png",
       # Missing text
       hashtags: ["#covid19", "#another"],
-      retweet_count: 12
+      retweet_count: 12,
+      label: :covid_tweets
     }
 
     # Insert tweet

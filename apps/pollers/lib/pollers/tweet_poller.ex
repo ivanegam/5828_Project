@@ -22,8 +22,23 @@ defmodule Pollers.TweetPoller do
         tweetcount_covid = tweetdata_covid.counts
         tweetcount_vaccine = tweetdata_vaccine.counts
 
-        Data.insert_daily_count(%{date: yesterday, label: :covid_tweets, count: tweetcount_covid})
-        Data.insert_daily_count(%{date: yesterday, label: :vaccine_tweets, count: tweetcount_vaccine})
+        toptweets_covid = tweetdata_covid.retweeteds
+        toptweets_vaccine = tweetdata_vaccine.retweeteds
+
+        hashtags_covid = tweetdata_covid.hashtags
+        hashtags_vaccine = tweetdata_vaccine.hashtags
+
+        #Insert tweets counts
+        Data.insert_daily_count(tweetcount_covid)
+        Data.insert_daily_count(tweetcount_vaccine)
+
+        #Insert top tweets
+        Enum.each(toptweets_covid, fn (tweet) -> Data.insert_tweet(tweet) end)
+        Enum.each(toptweets_vaccine, fn (tweet) -> Data.insert_tweet(tweet) end)
+
+        #Insert top hashtags
+        Data.insert_hashtags(hashtags_covid)
+        Data.insert_hashtags(hashtags_vaccine)
     end
 
     if findwork_covid_cases() do

@@ -26,7 +26,10 @@ defmodule Pollers.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:data, in_umbrella: true} # depends on the Data app for persistence
+      {:data, in_umbrella: true}, # depends on the Data app for persistence
+      {:covid_daily_tweets, in_umbrella: true},
+      {:covid_cases, in_umbrella: true},
+      {:covid_vaccines, in_umbrella: true},
     ]
   end
 end

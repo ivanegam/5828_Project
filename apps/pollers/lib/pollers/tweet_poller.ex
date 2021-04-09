@@ -1,5 +1,6 @@
 defmodule Pollers.TweetPoller do
   use Task
+  import Ecto.Query, only: [from: 2]
 
   @poll_milliseconds 3_600_000
 
@@ -8,7 +9,43 @@ defmodule Pollers.TweetPoller do
   end
 
   def poll() do
-    get_tweets()
+
+    yesterday = CovidDailyTweets.getYesterdayDenver()
+    before_yesterday = Date.add(yesterday, -1)
+
+    if findwork_tweets() do
+      #If no tweet data for yesterday has been recorded, call the Twitter API and record it
+
+        tweetdata_covid = CovidDailyTweets.metrics_yesterday("covid")
+        tweetdata_vaccine = CovidDailyTweets.metrics_yesterday("vaccine")
+
+        tweetcount_covid = tweetdata_covid.counts
+        tweetcount_vaccine = tweetdata_vaccine.counts
+
+        Data.insert_daily_count(%{date: yesterday, label: :covid_tweets, count: tweetcount_covid})
+        Data.insert_daily_count(%{date: yesterday, label: :vaccine_tweets, count: tweetcount_vaccine})
+    end
+
+    if findwork_covid_cases() do
+      #If no case data for day-before-yesterday has been recorded, call the Data.CDC.gov API and record it
+
+      covid_case_data = CovidCases.process_covid_cases()
+
+      case_count = covid_case_data[before_yesterday]
+
+      Data.insert_daily_count(%{date: before_yesterday, label: :covid_cases, count: case_count})
+     end
+
+    if findwork_covid_vaccines() do
+      #If no vaccine data for day-before-yesterday has been recorded, call the OWID API and record it
+
+      vaccine_data = CovidVaccines.process_covid_vaccines()
+
+      vaccine_count = vaccine_data[before_yesterday]
+
+      Data.insert_daily_count(%{date: before_yesterday, label: :vaccine_counts, count: vaccine_count})
+    end
+
     receive do
     after
       @poll_milliseconds ->
@@ -16,34 +53,38 @@ defmodule Pollers.TweetPoller do
     end
   end
 
-  defp get_tweets() do
-    # TODO Here we will call the Twitter API and add tweets
-    # to the database. For now, as an example, I am just
-    # creating a tweet from scratch.
+  def findwork_tweets() do
+    #Checks if there is tweet data for yesterday already recorded
 
-    # Create a tweet
-    retweets = Enum.random(0..1000)
-    text = "This was retweeted #{retweets} times"
-    tweet = %{
-      time: DateTime.truncate(DateTime.utc_now, :second),
-      name: "Bob Jones",
-      screen_name: "therealbobjones",
-      profile_image_url: "https://pbs.twimg.com/profile_images/1307830840169299969/ax10eQV__normal.jpg",
-      text: text,
-      hashtags: ["#covid19", "#vaccine"],
-      retweet_count: retweets
-    }
+    query = from c in Data.DailyCount,
+                 select: c.date
 
-    # Insert into database
-    case Data.insert_tweet(tweet) do
-      {:ok, _tweet} ->
-        IO.puts "Successfully processed tweet"
-      {:error, changeset} ->
-        IO.puts "Error inserting tweet"
-        for e <- changeset.errors do
-          IO.puts e
-        end
-    end
+    Data.Repo.all(query) |>
+    Enum.member?(CovidDailyTweets.getYesterdayDenver()) |>
+    Kernel.!
   end
 
+  def findwork_covid_cases() do
+    #Check if there is COVID-19 case data for day-before-yesterday already recorded
+
+    query = from c in Data.DailyCount,
+                 where: c.label == :covid_cases,
+                 select: c.date
+
+    Data.Repo.all(query) |>
+      Enum.member?(Date.add(CovidDailyTweets.getYesterdayDenver(),-1))|>
+      Kernel.!
+  end
+
+  def findwork_covid_vaccines() do
+    #Check if there is COVID-19 vaccine data for day-before-yesterday already recorded
+
+    query = from c in Data.DailyCount,
+                 where: c.label == :vaccine_counts,
+                 select: c.date
+
+    Data.Repo.all(query) |>
+      Enum.member?(Date.add(CovidDailyTweets.getYesterdayDenver(),-1))|>
+      Kernel.!
+  end
 end

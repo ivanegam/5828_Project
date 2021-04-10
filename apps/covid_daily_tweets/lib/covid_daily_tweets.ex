@@ -79,7 +79,7 @@ defmodule CovidDailyTweets do
       for x <- getDailyTweets(keyword) do
         x.statuses |>
           Enum.filter(fn x -> dateTimeIsYesterday(parseTime(x.created_at)) end) |>
-          Enum.map(fn x -> %{time: parseTime(x.created_at), name: x.user.name, screen_name: x.user.screen_name, profile_image_url: x.user.profile_image_url_https, text: x.text, hashtags: getHashtag(x.entities.hashtags), retweet_count: x.retweet_count} end)
+          Enum.map(fn x -> %{time: parseTime(x.created_at), name: x.user.name, screen_name: x.user.screen_name, profile_image_url: x.user.profile_image_url_https, text: x.text, hashtags: getHashtag(x.entities.hashtags), retweet_count: x.retweet_count, label: String.to_atom(keyword <> "_tweets")} end)
       end |>
         List.flatten()
     end
@@ -87,7 +87,9 @@ defmodule CovidDailyTweets do
     def tweetcount_yesterday(tweetdata) do
       #Get tweet count from tweet data
 
-      length(tweetdata)
+      count = length(tweetdata)
+
+      %{date: getYesterdayDenver(), count: count, label: List.first(tweetdata).label}
     end
 
     def common_hashtags_yesterday(tweetdata) do
@@ -95,7 +97,7 @@ defmodule CovidDailyTweets do
 
       excludedHashtags = ["", "VACCINE", "VACCINATION", "COVID", "COVID19", "COVID_19", "COVIDVACCINE", "CORONAVIRUS"]
 
-      tweetdata |>
+      hashtags = tweetdata |>
         Enum.map(fn x -> x.hashtags end) |>
         List.flatten() |>
         Enum.map(fn x -> String.downcase(x) end) |>
@@ -104,6 +106,8 @@ defmodule CovidDailyTweets do
         Enum.filter(fn {_k, v} -> v > 1 end) |>
         Enum.sort_by(&elem(&1, 1), :desc) |>
         Enum.map(fn x -> "#" <> elem(x,0) <> " " <> "(" <> to_string(elem(x, 1)) <> ")" end)
+
+        %{date: getYesterdayDenver(), hashtags: hashtags, label: List.first(tweetdata).label}
     end
 
     def most_retweeted_yesterday(tweetdata) do

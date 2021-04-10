@@ -57,4 +57,11 @@ defmodule Data do
     changeset = Data.DailyCount.changeset(%Data.DailyCount{}, params)
     Data.Repo.insert(changeset)
   end
+
+
+  # Insert list of hashtags.
+  def insert_hashtags(params) do
+    changeset = Data.Hashtag.changeset(%Data.Hashtag{}, params)
+    Data.Repo.insert(changeset)
+  end
 end

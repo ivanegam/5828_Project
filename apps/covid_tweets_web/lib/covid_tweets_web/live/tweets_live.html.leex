@@ -1,0 +1,82 @@
+<div class="row-centered">
+  <div class="col-centered">
+    <div class="row">
+      <div class="col-">
+        <div class="tweet-select-btns">
+          <button phx-click="covid" class="<%= @button_style_covid %>">covid</button>
+          <button phx-click="vaccine" class="<%= @button_style_vaccine %>">vaccine</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main-row">
+  <div class="col">
+    <div class="area">
+      <div class="container">
+        <div class="row">
+          <div class="col-">
+            <div class="twitter-logo">
+              <img src="<%= Routes.static_path(@socket, "/images/twitter-logo-blue.png") %>" alt="twitter"/>
+            </div>
+          </div>
+          <div class="col-">
+            <div class="title">
+              <h2><%= gettext "Tweets" %></h2>
+            </div>
+            <p>Top tweets for <b><%= @label %></b> on <%= @yesterday %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= for tweet <- @tweets do %>
+      <div class="area">
+        <div class="media">
+          <div class="media-left">
+            <img class="profile-picture" src="<%= tweet.profile_image_url %>" width="45" height="45">
+          </div>
+          <div class="media-body">
+            <div class="meta">
+              <span class="name"><%= tweet.name %></a></span>
+              <span class="tweet-data-text">@<%= tweet.screen_name %></span>
+              <span class="tweet-data-text"><%= format_datetime(tweet.time) %></span>
+            </div>
+
+            <div class="text">
+              <%= raw tweet.text %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="main-row">
+  <div class="col">
+    <div class="area">
+      <div class="container">
+        <div class="row">
+          <div class="col-">
+            <div class="twitter-logo">
+              <img src="<%= Routes.static_path(@socket, "/images/hashtag.png") %>" alt="twitter"/>
+            </div>
+          </div>
+          <div class="col-">
+            <div class="title">
+              <h2><%= gettext "Hashtags" %></h2>
+            </div>
+            <p>Top hashtags associated with <b><%= @label %></b> on <%= @yesterday %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%= for hashtag <- @hashtags.hashtags do %>
+      <div class="area">
+        <%= hashtag %>
+      </div>
+    <% end %>
+  </div>
+</div>

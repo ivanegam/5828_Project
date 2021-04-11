@@ -4,10 +4,10 @@ defmodule CovidDailyTweets do
 
     def configure() do
       ExTwitter.configure(
-        [consumer_key: "",
-          consumer_secret: "",
-          access_token: "",
-          access_token_secret: ""])
+        [consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
+          consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
+          access_token: System.get_env("TWITTER_ACCESS_TOKEN"),
+          access_token_secret: System.get_env("TWITTER_ACCESS_TOKEN_SECRET")])
     end
 
     def getYesterdayDenver() do

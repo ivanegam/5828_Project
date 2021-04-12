@@ -11,3 +11,7 @@
     <% end %>
   </div>
 </div>
+
+<div class="switch_button">
+    <button class="button" data-csrf="csrf_token" data-method="get" data-to="/graphs">To Graphs</button>
+</div>

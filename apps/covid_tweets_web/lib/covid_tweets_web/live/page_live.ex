@@ -101,7 +101,8 @@ defmodule CovidTweetsWeb.PageLive do
     data_filled = if interpolate do
       # Interpolate
       val = cond do 
-        index > 0 and index < length(data_to_fill) -> div(Enum.at(data_to_fill, index - 1) + Enum.at(data_to_fill, index), 2)
+        index > 0 and index < length(data_to_fill) -> 
+          Enum.at(data_to_fill, index - 1) + div(Enum.at(data_to_fill, index - 1) - Enum.at(data_to_fill, index), Date.diff(Enum.at(dates_to_fill, index-1), Enum.at(dates_to_fill, index)))
         index > 0 -> Enum.at(data_to_fill, index - 1)
         index < length(data_to_fill) -> Enum.at(data_to_fill, index)
         true -> 0

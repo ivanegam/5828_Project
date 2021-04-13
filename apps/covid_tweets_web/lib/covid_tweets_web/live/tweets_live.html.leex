@@ -5,6 +5,7 @@
         <div class="tweet-select-btns">
           <button phx-click="covid" class="<%= @button_style_covid %>">covid</button>
           <button phx-click="vaccine" class="<%= @button_style_vaccine %>">vaccine</button>
+          <button class="btn btn-info" data-csrf="csrf_token" data-method="get" data-to="/graphs">graphs</button>
         </div>
       </div>
     </div>

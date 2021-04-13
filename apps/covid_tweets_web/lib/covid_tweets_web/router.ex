@@ -18,7 +18,8 @@ defmodule CovidTweetsWeb.Router do
   scope "/", CovidTweetsWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    #get "/", PageController, :index
+    live "/", TweetsLive, :index
   end
 
   scope "/graphs", CovidTweetsWeb do

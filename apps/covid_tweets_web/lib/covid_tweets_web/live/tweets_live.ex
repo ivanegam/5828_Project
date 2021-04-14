@@ -46,15 +46,15 @@ defmodule CovidTweetsWeb.TweetsLive do
 
     # Get tweets from yesterday with a specific label
     def get_tweets_yesterday(label) do
-        yesterday = CovidDailyTweets.getYesterdayDenver()
         tweet_query = from t in Data.Tweet,
-                      where: t.label == ^label and fragment("?::date", t.time) == ^yesterday,
+                      where: t.label == ^label,# and fragment("?::date", t.time) == ^yesterday,
                       order_by: [desc: :time, desc: :retweet_count],
                       limit: 5
         
         tweet_query
         |> Data.Repo.all
         |> Enum.map(fn(tweet) -> %Data.Tweet{tweet | text: format_links(tweet.text)} end)
+        |> Enum.filter(fn tweet -> CovidDailyTweets.dateTimeIsYesterday(DateTime.shift_zone!(tweet.time,"America/Denver")) end)
     end
 
     # Load "covid" tweets when the covid button is clicked

@@ -74,10 +74,12 @@
         </div>
       </div>
     </div>
-    <%= if @hashtags do for hashtag <- @hashtags.hashtags do %>
-      <div class="area">
-        <%= hashtag %>
-      </div>
-    <% end end %>
+    <%= if @hashtags do %>
+      <%= for hashtag <- @hashtags.hashtags do %>
+        <div class="area">
+          <%= hashtag %>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 </div>

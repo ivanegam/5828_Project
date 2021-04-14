@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :appsignal, :config, revision: "0.01"
+config :appsignal, :config, revision: "0.01",
   active: true,
   otp_app: :metrics,
   name: "cscs_5280_project",

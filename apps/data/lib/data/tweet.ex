@@ -18,7 +18,5 @@ defmodule Data.Tweet do
     |> Ecto.Changeset.cast(params, [:time, :name, :screen_name, :profile_image_url, :text, :hashtags, :retweet_count, :label, :sentiment])
     |> Ecto.Changeset.validate_required([:time, :name, :screen_name, :profile_image_url, :text, :hashtags, :retweet_count, :label, :sentiment])
     |> Ecto.Changeset.validate_inclusion(:label, [:covid_tweets, :vaccine_tweets])
-    |> Ecto.Changeset.validate_number(:sentiment, greater_than_or_equal_to: -5)
-    |> Ecto.Changeset.validate_number(:sentiment, less_than_or_equal_to: 5)
   end
 end

@@ -22,8 +22,13 @@ defmodule Pollers.TweetPoller do
         tweetcount_covid = tweetdata_covid.counts
         tweetcount_vaccine = tweetdata_vaccine.counts
 
-        toptweets_covid = tweetdata_covid.retweeteds
-        toptweets_vaccine = tweetdata_vaccine.retweeteds
+        toptweets_covid =
+          tweetdata_covid.retweeteds
+          |> Enum.map(fn(tweet) -> Map.put(tweet, :sentiment, DataAnalysis.get_sentiment(tweet.text)) end)
+        
+        toptweets_vaccine =
+          tweetdata_vaccine.retweeteds
+          |> Enum.map(fn(tweet) -> Map.put(tweet, :sentiment, DataAnalysis.get_sentiment(tweet.text)) end)
 
         hashtags_covid = tweetdata_covid.hashtags
         hashtags_vaccine = tweetdata_vaccine.hashtags
@@ -71,10 +76,11 @@ defmodule Pollers.TweetPoller do
   def findwork_tweets() do
     #Checks if there is tweet data for yesterday already recorded
 
-    query = from c in Data.DailyCount,
-                 select: c.date
+    query = from c in Data.Tweet,
+                 select: c.time
 
     Data.Repo.all(query) |>
+    Enum.map(fn(t) -> DateTime.to_date(t) end) |>
     Enum.member?(CovidDailyTweets.getYesterdayDenver()) |>
     Kernel.!
   end

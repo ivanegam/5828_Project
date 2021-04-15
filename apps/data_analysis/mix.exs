@@ -1,9 +1,9 @@
-defmodule Pollers.MixProject do
+defmodule DataAnalysis.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :pollers,
+      app: :data_analysis,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -18,19 +18,14 @@ defmodule Pollers.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {Pollers.Application, []}
+      extra_applications: [:logger]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:data, in_umbrella: true}, # depends on the Data app for persistence
-      {:covid_daily_tweets, in_umbrella: true},
-      {:covid_cases, in_umbrella: true},
-      {:covid_vaccines, in_umbrella: true},
-      {:data_analysis, in_umbrella: true}
+      {:veritaserum, "~> 0.2.2"}
     ]
   end
 end

@@ -14,7 +14,8 @@ defmodule DataTweetTest do
       text: "Test tweet.",
       hashtags: ["#covid19", "#another"],
       retweet_count: 12,
-      label: :covid_tweets
+      label: :covid_tweets,
+      sentiment: 0
     }
 
     # Insert tweet
@@ -29,6 +30,7 @@ defmodule DataTweetTest do
     assert ret.hashtags == tweet.hashtags
     assert ret.retweet_count == tweet.retweet_count
     assert ret.label == tweet.label
+    assert ret.sentiment == tweet.sentiment
 
     # Retrieve tweet
     query = from t in Data.Tweet,
@@ -46,6 +48,7 @@ defmodule DataTweetTest do
       assert q_tweet.hashtags == tweet.hashtags
       assert q_tweet.retweet_count == tweet.retweet_count
       assert q_tweet.label == tweet.label
+      assert q_tweet.sentiment == tweet.sentiment
   end
 
   test "error on inserting tweet with missing data" do
@@ -58,7 +61,48 @@ defmodule DataTweetTest do
       # Missing text
       hashtags: ["#covid19", "#another"],
       retweet_count: 12,
-      label: :covid_tweets
+      label: :covid_tweets,
+      sentiment: -1
+    }
+
+    # Insert tweet
+    changeset = Data.Tweet.changeset(%Data.Tweet{}, tweet)
+    {status, _ret} = Data.Repo.insert(changeset)
+    assert status == :error
+  end
+
+  test "error on inserting tweet with sentiment to low" do
+    # Create tweet
+    tweet = %{
+      time: ~U[2021-01-01 02:00:42Z],
+      name: "Test User",
+      screen_name: "TheTestUser",
+      profile_image_url: "https://www.testdomain.com/image.png",
+      text: "Test tweet.",
+      hashtags: ["#covid19", "#another"],
+      retweet_count: 12,
+      label: :covid_tweets,
+      sentiment: -6
+    }
+
+    # Insert tweet
+    changeset = Data.Tweet.changeset(%Data.Tweet{}, tweet)
+    {status, _ret} = Data.Repo.insert(changeset)
+    assert status == :error
+  end
+
+  test "error on inserting tweet with sentiment to high" do
+    # Create tweet
+    tweet = %{
+      time: ~U[2021-01-01 02:00:42Z],
+      name: "Test User",
+      screen_name: "TheTestUser",
+      profile_image_url: "https://www.testdomain.com/image.png",
+      text: "Test tweet.",
+      hashtags: ["#covid19", "#another"],
+      retweet_count: 12,
+      label: :covid_tweets,
+      sentiment: 6
     }
 
     # Insert tweet

@@ -1,3 +1,0 @@
-# CovidTweets
-
-**TODO: Add description**

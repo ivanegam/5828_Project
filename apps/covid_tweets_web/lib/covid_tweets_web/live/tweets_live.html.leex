@@ -47,15 +47,15 @@
               <span class="tweet-data-sentiment">
                 <small class="text-muted">Sentiment: <%= tweet.sentiment %></small>
                 <%= case tweet.sentiment do %>
-                <%= n when n > 0 -> %>
+                <% n when n > 0 -> %>
                   <img src="<%= Routes.static_path(@socket, "/images/smile.png") %>" width="25" height="25">
-                <%= 0 -> %>
+                <% 0 -> %>
                   <img src="<%= Routes.static_path(@socket, "/images/neutral.png") %>" width="25" height="25">
-                <%= n when n < 0 -> %>
+                <% n when n < 0 -> %>
                   <img src="<%= Routes.static_path(@socket, "/images/frown.png") %>" width="25" height="25">
-                <%= end %>
+                <% end %>
                 </span>
-            <%= end %>
+            <% end %>
             </div>
 
             <div class="text">

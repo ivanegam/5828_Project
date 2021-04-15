@@ -3,7 +3,7 @@ defmodule Data.Repo.Migrations.AddSentiment do
 
   def change do
     alter table(:tweets) do
-      add :sentiment, :integer
+      add :sentiment, :integer, default: 0
     end
   end
 end

@@ -43,6 +43,19 @@
               <span class="name"><%= tweet.name %></a></span>
               <span class="tweet-data-text">@<%= tweet.screen_name %></span>
               <span class="tweet-data-text"><%= format_datetime(tweet.time) %></span>
+              <%= if tweet.sentiment do %>
+              <span class="tweet-data-sentiment">
+                <small class="text-muted">Sentiment: <%= tweet.sentiment %></small>
+                <%= case tweet.sentiment do %>
+                <%= n when n > 0 -> %>
+                  <img src="<%= Routes.static_path(@socket, "/images/smile.png") %>" width="25" height="25">
+                <%= 0 -> %>
+                  <img src="<%= Routes.static_path(@socket, "/images/neutral.png") %>" width="25" height="25">
+                <%= n when n < 0 -> %>
+                  <img src="<%= Routes.static_path(@socket, "/images/frown.png") %>" width="25" height="25">
+                <%= end %>
+                </span>
+            <%= end %>
             </div>
 
             <div class="text">

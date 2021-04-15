@@ -58,6 +58,10 @@ body {
   color: $text-color-dark;
 }
 
+.tweet-data-sentiment {
+  @extend .float-right;
+}
+
 /* Tweet Display */
 .area {
   background-color: $area-bg-color;

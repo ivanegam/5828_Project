@@ -92,6 +92,7 @@ defmodule CovidTweetsWeb.TweetsLive do
                         where: h.label == ^label and h.date == ^yesterday
         
         hashtag_query
+        |> Ecto.Query.first
         |> Data.Repo.one
     end
 

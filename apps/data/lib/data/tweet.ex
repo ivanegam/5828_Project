@@ -10,11 +10,12 @@ defmodule Data.Tweet do
     field :hashtags, {:array, :string}
     field :retweet_count, :integer
     field :label, Ecto.Enum, values: [:covid_tweets, :vaccine_tweets]
+    field :sentiment, :integer
   end
 
   def changeset(tweet, params \\ %{}) do
     tweet
-    |> Ecto.Changeset.cast(params, [:time, :name, :screen_name, :profile_image_url, :text, :hashtags, :retweet_count, :label])
+    |> Ecto.Changeset.cast(params, [:time, :name, :screen_name, :profile_image_url, :text, :hashtags, :retweet_count, :label, :sentiment])
     |> Ecto.Changeset.validate_required([:time, :name, :screen_name, :profile_image_url, :text, :hashtags, :retweet_count, :label])
     |> Ecto.Changeset.validate_inclusion(:label, [:covid_tweets, :vaccine_tweets])
   end

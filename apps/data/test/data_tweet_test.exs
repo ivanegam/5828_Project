@@ -71,7 +71,7 @@ defmodule DataTweetTest do
     assert status == :error
   end
 
-  test "error on inserting tweet with sentiment to low" do
+  test "error on inserting tweet with invalid bad sentiment" do
     # Create tweet
     tweet = %{
       time: ~U[2021-01-01 02:00:42Z],
@@ -82,7 +82,7 @@ defmodule DataTweetTest do
       hashtags: ["#covid19", "#another"],
       retweet_count: 12,
       label: :covid_tweets,
-      sentiment: -6
+      sentiment: -6.5
     }
 
     # Insert tweet
@@ -91,7 +91,7 @@ defmodule DataTweetTest do
     assert status == :error
   end
 
-  test "error on inserting tweet with sentiment to high" do
+  test "error on inserting tweet with invalid good sentiment" do
     # Create tweet
     tweet = %{
       time: ~U[2021-01-01 02:00:42Z],
@@ -102,7 +102,7 @@ defmodule DataTweetTest do
       hashtags: ["#covid19", "#another"],
       retweet_count: 12,
       label: :covid_tweets,
-      sentiment: 6
+      sentiment: "good"
     }
 
     # Insert tweet

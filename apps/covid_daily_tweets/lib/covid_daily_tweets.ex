@@ -26,7 +26,7 @@ defmodule CovidDailyTweets do
       #BY authors residing IN, or tweeted FROM 80-mi radius of Denver,
       #Since yesterday (UTC)
 
-      response = ExTwitter.search(keyword, [result_type: "recent", include_entities: true, count: 100, search_metadata: true, geocode: "39.7642548,-104.9951964,80mi", exclude: "retweets", since: Date.to_iso8601(getYesterdayDenver())])
+      response = ExTwitter.search(keyword, [result_type: "recent", include_entities: true, count: 100, search_metadata: true, geocode: "39.7642548,-104.9951964,80mi", exclude: "retweets", since: Date.to_iso8601(getYesterdayDenver()), lang: "en"])
 
       #Append remaining pages of search results, if any
       cond do

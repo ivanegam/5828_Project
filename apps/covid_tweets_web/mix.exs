@@ -52,7 +52,8 @@ defmodule CovidTweetsWeb.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:timex, "~> 3.0"},
       {:data, in_umbrella: true}, # depends on the Data app for persistence
-      {:covid_daily_tweets, in_umbrella: true}
+      {:covid_daily_tweets, in_umbrella: true},
+      {:appsignal_phoenix, "~> 2.0.0"}
     ]
   end
 

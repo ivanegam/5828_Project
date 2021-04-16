@@ -44,3 +44,6 @@ config :covid_cases, :cdc_api, CovidCases.CDCAPI.HttpClient
 
 #Config for the real CSV reader
 config :covid_vaccines, :csv_reader, CovidVaccines.CSVReader.Reader
+
+#Config for test Twitter API
+config :covid_daily_tweets, :twitter_api, CovidDailyTweets.TwitterAPI.API

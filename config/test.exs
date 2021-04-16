@@ -21,3 +21,6 @@ config :covid_cases, :cdc_api, CovidCases.CDCAPI.MockClient
 
 #Config for test CVS reader
 config :covid_vaccines, :csv_reader, CovidVaccines.CSVReader.MockReader
+
+#Config for test Twitter API
+config :covid_daily_tweets, :twitter_api, CovidDailyTweets.TwitterAPI.MockAPI

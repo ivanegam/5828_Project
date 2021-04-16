@@ -30,8 +30,8 @@ defmodule CovidDailyTweets.MixProject do
       # {:sibling_app_in_umbrella, in_umbrella: true}
       {:extwitter, "~> 0.12.2"},
       {:timex, "~> 3.7"},
-      {:tzdata, "~> 1.1"}
-
+      {:tzdata, "~> 1.1"},
+      {:mox, "~> 1.0", only: :test},
     ]
   end
 end

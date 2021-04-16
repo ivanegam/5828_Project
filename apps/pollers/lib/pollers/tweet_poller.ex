@@ -80,9 +80,10 @@ defmodule Pollers.TweetPoller do
                  select: c.time
 
     Data.Repo.all(query) |>
-    Enum.map(fn(t) -> DateTime.to_date(t) end) |>
-    Enum.member?(CovidDailyTweets.getYesterdayDenver()) |>
-    Kernel.!
+      Enum.map(fn t -> DateTime.shift_zone(t, "America/Denver") end) |>
+      Enum.map(fn({:ok, t}) -> DateTime.to_date(t) end) |>
+      Enum.member?(CovidDailyTweets.getYesterdayDenver()) |>
+      Kernel.!
   end
 
   def findwork_covid_cases() do

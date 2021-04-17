@@ -7,6 +7,10 @@ defmodule Data.Hashtag do
     field :label, Ecto.Enum, values: [:covid_tweets, :vaccine_tweets]
   end
 
+  @doc """
+  Defines a changeset for inserting hashtag data into the database,
+  conforming to pre-set validation restrictions
+  """
   def changeset(hashtag, params \\ %{}) do
     hashtag
     |> Ecto.Changeset.cast(params, [:date, :hashtags, :label])

@@ -1,9 +1,9 @@
-defmodule CovidTweets.MixProject do
+defmodule Messaging.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :covid_tweets,
+      app: :messaging,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -22,7 +22,7 @@ defmodule CovidTweets.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {CovidTweets.Application, []},
+      mod: {Messaging.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

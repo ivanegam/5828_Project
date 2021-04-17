@@ -1,6 +1,7 @@
 defmodule CovidDailyTweets do
 
     use Timex
+    @default_config Application.get_env(:covid_daily_tweets, :twitter_api)
 
     def configure() do
       ExTwitter.configure(
@@ -18,22 +19,50 @@ defmodule CovidDailyTweets do
       Date.add(todayDenver,-1)
     end
 
-    def getDailyTweets(keyword) do
-      configure()
+    def process_tweet_data(keyword, config \\ @default_config) do
+      #Process tweet data fetched from Twitter API,
+      #Filtering by yesterday's date (Denver time),
+      #And extracting entities of interest (e.g., tweet text)
 
-      #Fetch initial page of Twitter search results for a given keyword,
-      #Excluding retweets,
-      #BY authors residing IN, or tweeted FROM 80-mi radius of Denver,
-      #Since yesterday (UTC)
+      tweet_data = config.getDailyTweets(keyword)
 
-      response = ExTwitter.search(keyword, [result_type: "recent", include_entities: true, count: 100, search_metadata: true, geocode: "39.7642548,-104.9951964,80mi", exclude: "retweets", since: Date.to_iso8601(getYesterdayDenver()), lang: "en"])
+      for x <- tweet_data do
+        x.statuses |>
+          Enum.filter(fn x -> dateTimeIsYesterday(parseTime(x.created_at)) end) |>
+          Enum.map(fn x -> %{time: parseTime(x.created_at), name: x.user.name, screen_name: x.user.screen_name, profile_image_url: x.user.profile_image_url_https, text: x.text, hashtags: getHashtag(x.entities.hashtags), retweet_count: x.retweet_count, label: String.to_atom(keyword <> "_tweets")} end)
+      end |>
+        List.flatten()
+    end
 
-      #Append remaining pages of search results, if any
-      cond do
-        Map.has_key?(response.metadata, :next_results) ->
-          getNext(response)
-        true ->
-          [response]
+    defmodule TwitterAPI do
+      #Define TwitterAPI behaviour, making sure the real and test clients conform to the same interface
+
+      @callback getDailyTweets(keyword) :: list()
+    end
+
+    defmodule TwitterAPI.API do
+      #Real implementation of the Twitter API
+
+      @behaviour TwitterAPI
+
+      @impl TwitterAPI
+      def getDailyTweets(keyword) do
+        CovidDailyTweets.configure()
+
+        #Fetch initial page of Twitter search results for a given keyword,
+        #Excluding retweets,
+        #BY authors residing IN, or tweeted FROM 80-mi radius of Denver,
+        #Since yesterday (UTC)
+
+        response = ExTwitter.search(keyword, [result_type: "recent", include_entities: true, count: 100, search_metadata: true, geocode: "39.7642548,-104.9951964,80mi", exclude: "retweets", since: Date.to_iso8601(CovidDailyTweets.getYesterdayDenver()), lang: "en"])
+
+        #Append remaining pages of search results, if any
+        cond do
+          Map.has_key?(response.metadata, :next_results) ->
+            CovidDailyTweets.getNext(response)
+          true ->
+            [response]
+        end
       end
     end
 
@@ -51,6 +80,8 @@ defmodule CovidDailyTweets do
     end
 
     def getHashtag(hashtags) do
+      #Map tweet hashtags to a list
+
       hashtags |>
       Enum.map(fn x -> x.text end)
     end
@@ -71,19 +102,6 @@ defmodule CovidDailyTweets do
       Date.compare(DateTime.to_date(dateTime), getYesterdayDenver()) == :eq
     end
 
-    def tweetdata_yesterday(keyword) do
-      #Fetch tweet data for yesterday (UTC) for a given keyword,
-      #from all pages of search results since "yesterday" may span multiple pages,
-      #further filter to "yesterday" relative to Denver time
-
-      for x <- getDailyTweets(keyword) do
-        x.statuses |>
-          Enum.filter(fn x -> dateTimeIsYesterday(parseTime(x.created_at)) end) |>
-          Enum.map(fn x -> %{time: parseTime(x.created_at), name: x.user.name, screen_name: x.user.screen_name, profile_image_url: x.user.profile_image_url_https, text: x.text, hashtags: getHashtag(x.entities.hashtags), retweet_count: x.retweet_count, label: String.to_atom(keyword <> "_tweets")} end)
-      end |>
-        List.flatten()
-    end
-
     def tweetcount_yesterday(tweetdata) do
       #Get tweet count from tweet data
 
@@ -93,7 +111,7 @@ defmodule CovidDailyTweets do
     end
 
     def common_hashtags_yesterday(tweetdata) do
-      #Get hashtags from tweet data
+      #Get most common hashtags from tweet data
 
       excludedHashtags = ["", "VACCINE", "VACCINATION", "COVID", "COVID19", "COVID_19", "COVIDVACCINE", "CORONAVIRUS"]
 
@@ -121,7 +139,7 @@ defmodule CovidDailyTweets do
     def metrics_yesterday(keyword) do
       #Fetch all metrics for a keyword together to avoid multiple calls
 
-      tweetdata = tweetdata_yesterday(keyword)
+      tweetdata = process_tweet_data(keyword)
 
       %{counts: tweetcount_yesterday(tweetdata), hashtags: common_hashtags_yesterday(tweetdata), retweeteds: most_retweeted_yesterday(tweetdata)}
     end

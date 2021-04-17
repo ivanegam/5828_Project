@@ -19,7 +19,7 @@ config :covid_tweets_web, CovidTweetsWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "4DyAFwK3Hy2QmYYbR02yH78PyZwwkG+4pH1wyhY9TxavZgGtHd/sTaE+oNfjB7KS",
   render_errors: [view: CovidTweetsWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: CovidTweets.PubSub,
+  pubsub_server: Messaging.PubSub,
   live_view: [signing_salt: "Vvbk3XMd"]
 
 # Configures Elixir's Logger
@@ -44,3 +44,6 @@ config :covid_cases, :cdc_api, CovidCases.CDCAPI.HttpClient
 
 #Config for the real CSV reader
 config :covid_vaccines, :csv_reader, CovidVaccines.CSVReader.Reader
+
+#Config for test Twitter API
+config :covid_daily_tweets, :twitter_api, CovidDailyTweets.TwitterAPI.API

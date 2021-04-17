@@ -39,7 +39,9 @@ defmodule Data.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:covid_cases, in_umbrella: true},
+      {:covid_vaccines, in_umbrella: true},
     ]
   end
 end

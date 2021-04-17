@@ -5,3 +5,7 @@ for app <- Application.spec(:covid_daily_tweets, :applications) do
 end
 
 ExUnit.start()
+
+Mox.defmock(CovidDailyTweets.TwitterAPI.MockAPI, for: CovidDailyTweets.TwitterAPI)
+
+Application.put_env(:covid_daily_tweets, :twitter_api, CovidDailyTweets.TwitterAPI.MockAPI)

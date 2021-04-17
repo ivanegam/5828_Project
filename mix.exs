@@ -8,7 +8,8 @@ defmodule CovidTweets.Umbrella.MixProject do
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+      preferred_cli_env: ["test.acceptance": :test]
     ]
   end
 
@@ -42,7 +43,20 @@ defmodule CovidTweets.Umbrella.MixProject do
     [
       # run `mix setup` in all child apps
       setup: ["cmd mix setup"],
-      test: ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate", "test --no-start"]
+      
+      test: [
+        "ecto.drop --quiet",
+        "ecto.create --quiet",
+        "ecto.migrate",
+        "test --no-start --exclude acceptance"
+      ],
+
+      "test.acceptance": [
+        "ecto.drop --quiet",
+        "ecto.create --quiet",
+        "ecto.migrate",
+        "test --no-start --only acceptance"
+      ]
     ]
   end
 end

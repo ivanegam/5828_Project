@@ -47,3 +47,6 @@ config :covid_vaccines, :csv_reader, CovidVaccines.CSVReader.Reader
 
 #Config for test Twitter API
 config :covid_daily_tweets, :twitter_api, CovidDailyTweets.TwitterAPI.API
+
+# Hound config for acceptance tests
+config :hound, driver: "chrome_driver"

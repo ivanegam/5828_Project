@@ -2,11 +2,11 @@ defmodule CovidTweetsWeb.PageLive do
   use CovidTweetsWeb, :live_view
   import Ecto.Query, only: [from: 2]
 
-  @first_day "2021-03-01"
+  @first_day "2021-04-07"
 
   @impl true
   def mount(_params, _session, socket) do
-    today = Date.utc_today() |> Date.to_string
+    today = Date.add(Date.utc_today(), -2) |> Date.to_string
     {:ok, assign(socket, first_day: @first_day, today: today)}
   end
 
@@ -97,7 +97,7 @@ defmodule CovidTweetsWeb.PageLive do
   def insert_missing(dates_to_fill, data_to_fill, all_dates, index) do
     dates_filled = List.insert_at(dates_to_fill, index, Enum.at(all_dates, index))
     # Set to false to always 0 fill
-    interpolate = true
+    interpolate = false
     data_filled = if interpolate do
       # Interpolate
       val = cond do 
@@ -108,9 +108,9 @@ defmodule CovidTweetsWeb.PageLive do
         true -> 0
       end
       List.insert_at(data_to_fill, index, val)
-      else
+    else
       # Zero fill
-      data_filled = List.insert_at(data_to_fill, index, 0)
+      List.insert_at(data_to_fill, index, 0)
     end
     {dates_filled, data_filled}
   end

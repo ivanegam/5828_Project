@@ -1,8 +1,14 @@
 defmodule CovidDailyTweets do
+  @moduledoc """
+  Provides functions for calling the Twitter API and processing the retrieved data
+  """
 
     use Timex
     @default_config Application.get_env(:covid_daily_tweets, :twitter_api)
 
+    @doc """
+    Configure the authentication data for the Twitter API
+    """
     def configure() do
       ExTwitter.configure(
         [consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
@@ -11,18 +17,22 @@ defmodule CovidDailyTweets do
           access_token_secret: System.get_env("TWITTER_ACCESS_TOKEN_SECRET")])
     end
 
+    @doc """
+    Gets yesterday's date (Denver time)
+    """
     def getYesterdayDenver() do
-      #Get yesterday's date (Denver time)
-
       {:ok, nowDenver} = DateTime.shift_zone(DateTime.utc_now, "America/Denver")
       todayDenver = DateTime.to_date(nowDenver)
       Date.add(todayDenver,-1)
     end
 
+    @doc """
+    Processes tweet data retrieved from from the Twitter API,
+    filtering by yesterday's date (Denver time),
+    and extracting entities of interest (e.g., tweet text)
+    """
     def process_tweet_data(keyword, config \\ @default_config) do
-      #Process tweet data fetched from Twitter API,
-      #Filtering by yesterday's date (Denver time),
-      #And extracting entities of interest (e.g., tweet text)
+
 
       tweet_data = config.getDailyTweets(keyword)
 
@@ -35,24 +45,31 @@ defmodule CovidDailyTweets do
     end
 
     defmodule TwitterAPI do
-      #Define TwitterAPI behaviour, making sure the real and test clients conform to the same interface
+      @moduledoc """
+      #Defines TwitterAPI behaviour, making sure the real and test clients
+      conform to the same interface
+      """
 
       @callback getDailyTweets(keyword) :: list()
     end
 
     defmodule TwitterAPI.API do
-      #Real implementation of the Twitter API
+      @moduledoc """
+      Real implementation of the Twitter API
+      """
 
       @behaviour TwitterAPI
 
+      @doc """
+      Retrieves initial page of Twitter search results for a given keyword,
+      excluding retweets,
+      BY authors residing IN, or tweeted FROM 80-mi radius of Denver,
+      since yesterday (UTC),
+      In English
+      """
       @impl TwitterAPI
       def getDailyTweets(keyword) do
         CovidDailyTweets.configure()
-
-        #Fetch initial page of Twitter search results for a given keyword,
-        #Excluding retweets,
-        #BY authors residing IN, or tweeted FROM 80-mi radius of Denver,
-        #Since yesterday (UTC)
 
         response = ExTwitter.search(keyword, [result_type: "recent", include_entities: true, count: 100, search_metadata: true, geocode: "39.7642548,-104.9951964,80mi", exclude: "retweets", since: Date.to_iso8601(CovidDailyTweets.getYesterdayDenver()), lang: "en"])
 
@@ -66,9 +83,10 @@ defmodule CovidDailyTweets do
       end
     end
 
+    @doc """
+    Recursively appends remaining pages of search results to those found by getDailyTweets/1
+    """
     def getNext(response) do
-      #Recursively append remaining pages of search results
-
       next = ExTwitter.search_next_page(response.metadata)
 
       cond do
@@ -79,16 +97,19 @@ defmodule CovidDailyTweets do
       end
     end
 
+    @doc """
+    Maps tweet hashtags to a list
+    """
     def getHashtag(hashtags) do
-      #Map tweet hashtags to a list
-
       hashtags |>
       Enum.map(fn x -> x.text end)
     end
 
+    @doc """
+    Parses the tweet timestamp provided by Twitter API,
+    and converts to the Denver timezone
+    """
     def parseTime(timeStr) do
-      #Parse tweet timestamp provided by Twitter API, convert to Denver timezone
-
       {:ok, dateTime} = Timex.parse(timeStr, "%a %b %d %T %z %Y", :strftime)
 
       {:ok, dateTimeDenver} = DateTime.shift_zone(dateTime, "America/Denver")
@@ -96,23 +117,27 @@ defmodule CovidDailyTweets do
       dateTimeDenver
     end
 
+    @doc """
+    Checks if a datetime is yesterday (in Denver time)
+    """
     def dateTimeIsYesterday(dateTime) do
-      #Check if a datetime (in Denver time) is yesterday (in Denver time)
-
       Date.compare(DateTime.to_date(dateTime), getYesterdayDenver()) == :eq
     end
 
+    @doc """
+    Gets tweet count from tweet data
+    """
     def tweetcount_yesterday(tweetdata) do
-      #Get tweet count from tweet data
-
       count = length(tweetdata)
 
       %{date: getYesterdayDenver(), count: count, label: List.first(tweetdata).label}
     end
 
+    @doc """
+    Get mosts common hashtags from tweet data,
+    excluding trivial ones
+    """
     def common_hashtags_yesterday(tweetdata) do
-      #Get most common hashtags from tweet data
-
       excludedHashtags = ["", "VACCINE", "VACCINATION", "COVID", "COVID19", "COVID_19", "COVIDVACCINE", "CORONAVIRUS"]
 
       hashtags = tweetdata |>
@@ -128,18 +153,23 @@ defmodule CovidDailyTweets do
         %{date: getYesterdayDenver(), hashtags: hashtags, label: List.first(tweetdata).label}
     end
 
+    @doc """
+    Gets most retweeted tweets from tweet data
+    """
     def most_retweeted_yesterday(tweetdata) do
-      #Get most retweeted tweets from tweet data
-
       tweetdata |>
         Enum.sort_by(fn(tweet) -> tweet.retweet_count end, :desc) |>
         Enum.take(5)
     end
 
+    @doc """
+    Calculates all metrics of interest for a given keyword together to avoid multiple calls:
+      - Total tweet counts
+      - Most common hashtags
+      - Most retweeted tweets
+    """
     def metrics_yesterday(keyword) do
-      #Fetch all metrics for a keyword together to avoid multiple calls
-
-      tweetdata = process_tweet_data(keyword)
+    tweetdata = process_tweet_data(keyword)
 
       %{counts: tweetcount_yesterday(tweetdata), hashtags: common_hashtags_yesterday(tweetdata), retweeteds: most_retweeted_yesterday(tweetdata)}
     end

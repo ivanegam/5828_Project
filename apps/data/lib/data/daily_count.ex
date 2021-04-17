@@ -7,6 +7,10 @@ defmodule Data.DailyCount do
     field :count, :integer
   end
 
+  @doc """
+  Defines a changeset for inserting daily tweet, case, and vaccine count data into the database,
+  conforming to pre-set validation restrictions
+  """
   def changeset(daily_count, params \\ %{}) do
     daily_count
     |> Ecto.Changeset.cast(params, [:date, :label, :count])

@@ -1,4 +1,7 @@
-# Covid Tweets
+# Readme
+## CU Boulder — CSCI 5828, Spring 2021
+### Final project: Covid Tweets
+
 Final project for CSCI 5828. See [project overview](https://github.com/ivanegam/5828_Project/wiki/Project-overview).
 
 Deployed to:

@@ -1,12 +1,19 @@
 defmodule CovidVaccines do
+  @moduledoc """
+  Provides functions for getting Our World in Data (OWID) global COVID-19 vaccination data
+  using a remote CSV reader, and processing the retrieved data
+  """
 
   @default_config Application.get_env(:covid_vaccines, :csv_reader)
-
-  ### Source for fetching a hosted CSV file: https://blog.agilion.com/decoding-a-hosted-csv-file-in-elixir-7aa0bb3f7468
 
   Application.ensure_all_started(:hackney)
 
   defmodule RemoteCSV do
+    @moduledoc """
+    Remote CSV reader, adapted from:
+      https://blog.agilion.com/decoding-a-hosted-csv-file-in-elixir-7aa0bb3f7468
+    """
+
     def stream(path) do
       Stream.resource(fn -> start_stream(path) end,
         &continue_stream/1,
@@ -68,9 +75,12 @@ defmodule CovidVaccines do
     end
   end
 
+  @doc """
+  Processes a hosted CSV file retrieved by the CSV reader,
+  Filtering by country (the U.S.),
+  And getting the date and count of COVID-19 vaccinations
+  """
   def process_covid_vaccines(config \\ @default_config) do
-    #Process CSV file fetched by the CSV reader
-
     config.fetch_vaccinations()
     |> Enum.map(fn {_, output} -> output end)
     |> Enum.filter(fn x -> x["iso_code"] == "USA" end)
@@ -80,15 +90,24 @@ defmodule CovidVaccines do
   end
 
   defmodule CSVReader do
-    #Define CSVReader behaviour, making sure the real and test CSV readers conform to the same interface
+    @moduledoc """
+    Defines CSVReader behaviour, making sure the real and test CSV readers
+    conform to the same interface
+    """
 
     @callback fetch_vaccinations() :: list()
   end
 
   defmodule CSVReader.Reader do
+    @moduledoc """
+    Real CSV reader
+    """
 
     @behaviour CSVReader
 
+    @doc """
+    Gets daily global COVID-19 vaccination data from the OWID API
+    """
     @impl CSVReader
     def fetch_vaccinations() do
       url = "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"

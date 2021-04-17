@@ -53,7 +53,7 @@ defmodule CovidTweetsWeb.MixProject do
       {:timex, "~> 3.0"},
       {:data, in_umbrella: true}, # depends on the Data app for persistence
       {:covid_daily_tweets, in_umbrella: true},
-      {:appsignal_phoenix, "~> 2.0.0"}
+      {:appsignal_phoenix, "~> 2.0.0"},
     ]
   end
 

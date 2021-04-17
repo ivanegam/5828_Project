@@ -79,8 +79,10 @@ defmodule CovidDailyTweetsTest do
       text: "Sample tweet contents.",
       time: created_at}
 
+    {:ok, dateTimeDenver} = DateTime.shift_zone(created_at,"America/Denver")
+
     assert CovidDailyTweets.common_hashtags_yesterday([tweet1,tweet2,tweet3]) ==
-      %{date: DateTime.to_date(created_at), hashtags: ["#tag1 (2)", "#tag2 (2)"], label: :covid_tweets}
+      %{date: DateTime.to_date(dateTimeDenver), hashtags: ["#tag1 (2)", "#tag2 (2)"], label: :covid_tweets}
   end
 
   test "sorts tweets by most retweeted" do

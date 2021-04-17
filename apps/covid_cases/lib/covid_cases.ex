@@ -1,7 +1,15 @@
 defmodule CovidCases do
+  @moduledoc """
+  Provides functions for calling the Data.CDC.Gov API using an HTTP client and
+  processing the retrieved COVID-19 data;
+  """
 
   @default_config Application.get_env(:covid_cases, :cdc_api)
 
+  @doc """
+  Gets the date of incidence and the number of incident cases from the retrieved COVID-19 data;
+  Aggregates the data from the state to the national level.
+  """
   def process_covid_cases(config \\ @default_config) do
     #Process JSON file fetched by the HTTP client
 
@@ -14,16 +22,23 @@ defmodule CovidCases do
   end
 
   defmodule CDCAPI do
-    #Define CDCAPI behaviour, making sure the real and test HTTP clients conform to the same interface
+    @moduledoc """
+    Defines CDCAPI behaviour, making sure the real and test HTTP clients conform to the same interface
+    """
 
     @callback get_cases() :: {:ok, map()}
   end
 
   defmodule CDCAPI.HttpClient do
-    #Real implementation of the HTTP client
+    @moduledoc """
+    Real implementation of the HTTP client
+    """
 
     @behaviour CDCAPI
 
+    @doc """
+    Gets daily state-level COVID-19 data from the Data.CDC.gov API
+    """
     @impl CDCAPI
     def get_cases() do
       url = "https://data.cdc.gov/resource/9mfq-cb36.json?$limit=1000000"

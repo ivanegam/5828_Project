@@ -1,4 +1,9 @@
 defmodule Pollers.TweetPoller do
+  @moduledoc """
+  Poller for periodically checking the database for the presence of
+  the latest available data
+  """
+
   use Task
   import Ecto.Query, only: [from: 2]
 
@@ -8,6 +13,12 @@ defmodule Pollers.TweetPoller do
     Task.start_link(&poll/0)
   end
 
+  @doc """
+  Checks if there is any work to be done for retrieving and inserting
+  daily count, tweet, and hashtag data;
+  if so, calls the Twitter/Data.CDC.gov/OWID APIs and
+  inserts the data into the database
+  """
   def poll() do
 
     yesterday = CovidDailyTweets.getYesterdayDenver()
@@ -73,9 +84,10 @@ defmodule Pollers.TweetPoller do
     end
   end
 
+  @doc """
+  Checks if there is tweet data for yesterday already in the database
+  """
   def findwork_tweets() do
-    #Checks if there is tweet data for yesterday already recorded
-
     query = from c in Data.Tweet,
                  select: c.time
 
@@ -86,9 +98,10 @@ defmodule Pollers.TweetPoller do
       Kernel.!
   end
 
+  @doc """
+  Checks if there is COVID-19 case data for day-before-yesterday already in the databasee
+  """
   def findwork_covid_cases() do
-    #Check if there is COVID-19 case data for day-before-yesterday already recorded
-
     query = from c in Data.DailyCount,
                  where: c.label == :covid_cases,
                  select: c.date
@@ -98,8 +111,10 @@ defmodule Pollers.TweetPoller do
       Kernel.!
   end
 
+  @doc """
+  Checks if there is COVID-19 vaccine data for day-before-yesterday already in the database
+  """
   def findwork_covid_vaccines() do
-    #Check if there is COVID-19 vaccine data for day-before-yesterday already recorded
 
     query = from c in Data.DailyCount,
                  where: c.label == :vaccine_counts,

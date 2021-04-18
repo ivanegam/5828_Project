@@ -15,7 +15,8 @@ defmodule CovidTweetsWeb.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       elixirc_paths: elixirc_paths(Mix.env()),
-      deps: deps()
+      deps: deps(),
+      preferred_cli_env: ["test.acceptance": :test]
     ]
   end
 
@@ -54,6 +55,7 @@ defmodule CovidTweetsWeb.MixProject do
       {:data, in_umbrella: true}, # depends on the Data app for persistence
       {:covid_daily_tweets, in_umbrella: true},
       {:appsignal_phoenix, "~> 2.0.0"},
+      {:hound, "~> 1.0"}
     ]
   end
 
@@ -62,8 +64,23 @@ defmodule CovidTweetsWeb.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"],
-      test: ["ecto.drop --quiet", "ecto.create --quiet", "ecto.migrate", "test"]
+      setup: [
+        "deps.get",
+        "cmd npm install --prefix assets"
+      ],
+
+      test: [
+        "ecto.drop --repo Data.Repo --quiet",
+        "ecto.create --repo Data.Repo --quiet",
+        "ecto.migrate --repo Data.Repo ",
+        "test --no-start --exclude acceptance"
+      ],
+
+      "test.acceptance": [
+        "ecto.drop --repo Data.Repo --quiet",
+        "ecto.create --repo Data.Repo --quiet",
+        "ecto.migrate --repo Data.Repo",
+        "test --no-start --only acceptance"]
     ]
   end
 end

@@ -3,9 +3,9 @@
     <div class="row">
       <div class="col-">
         <div class="tweet-select-btns">
-          <button phx-click="covid" class="<%= @button_style_covid %>">covid</button>
-          <button phx-click="vaccine" class="<%= @button_style_vaccine %>">vaccine</button>
-          <button class="btn btn-info" data-csrf="csrf_token" data-method="get" data-to="/graphs">graphs</button>
+          <button id="covid-button" phx-click="covid" class="<%= @button_style_covid %>">covid</button>
+          <button id="vaccine-button" phx-click="vaccine" class="<%= @button_style_vaccine %>">vaccine</button>
+          <button id="graphs-button" class="btn btn-info" data-csrf="csrf_token" data-method="get" data-to="/graphs">graphs</button>
         </div>
       </div>
     </div>
@@ -13,7 +13,7 @@
 </div>
 
 <div class="main-row">
-  <div class="col">
+  <div class="col" id="tweet-listing">
     <div class="area">
       <div class="container">
         <div class="row">
@@ -26,7 +26,7 @@
             <div class="title">
               <h2><%= gettext "Tweets" %></h2>
             </div>
-            <p>Top tweets for <b><%= @label %></b> on <%= @yesterday %> within 80 miles of Denver, CO</p>
+            <p id="tweet-desc">Top tweets for <b><%= @label %></b> on <%= @yesterday %> within 80 miles of Denver, CO</p>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@
 </div>
 
 <div class="main-row">
-  <div class="col">
+  <div class="col" id="hashtag-listing">
     <div class="area">
       <div class="container">
         <div class="row">
@@ -82,7 +82,7 @@
             <div class="title">
               <h2><%= gettext "Hashtags" %></h2>
             </div>
-            <p>Top hashtags associated with <b><%= @label %></b> on <%= @yesterday %> within 80 miles of Denver, CO</p>
+            <p id="hashtag-desc">Top hashtags associated with <b><%= @label %></b> on <%= @yesterday %> within 80 miles of Denver, CO</p>
           </div>
         </div>
       </div>

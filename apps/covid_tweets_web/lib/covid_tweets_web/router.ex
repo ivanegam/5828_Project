@@ -37,7 +37,7 @@ defmodule CovidTweetsWeb.Router do
   # end
 
   pipeline :admins_only do
-    plug :basic_auth, username: "admin", password: "Hippity Hoppity"
+    plug :basic_auth, username: "admin", password: System.get_env("LIVE_DASHBOARD_PW")
   end
 
   # Enables LiveDashboard only for development

@@ -37,7 +37,7 @@ defmodule CovidCases do
     @behaviour CDCAPI
 
     @doc """
-    Gets daily state-level COVID-19 data from the Data.CDC.gov API
+    Submit GET request to the Data.CDC.gov API to retrieve daily state-level COVID-19 data
     """
     @impl CDCAPI
     def get_cases() do

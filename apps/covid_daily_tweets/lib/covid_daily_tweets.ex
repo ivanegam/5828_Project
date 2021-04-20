@@ -61,7 +61,8 @@ defmodule CovidDailyTweets do
       @behaviour TwitterAPI
 
       @doc """
-      Retrieves initial page of Twitter search results for a given keyword,
+      Submit GET request to the Twitter API to
+      retrieve initial page of Twitter search results for a given keyword,
       excluding retweets,
       BY authors residing IN, or tweeted FROM 80-mi radius of Denver,
       since yesterday (UTC),

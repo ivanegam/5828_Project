@@ -102,18 +102,17 @@ defmodule DataDailyCountTest do
   end
 
   test "insert real COVID-19 case data" do
-    # Create daily count
+    # Create daily counts
 
     case_data = CovidCases.process_covid_cases()
 
     today = Date.utc_today
-    day_before_yesterday = Date.add(today,-2)
     tomorrow = Date.add(today,1)
 
     daily_count_1 = %{
-      date: day_before_yesterday,
+      date: ~D[2021-01-01],
       label: :covid_cases,
-      count: case_data[day_before_yesterday]
+      count: case_data[~D[2021-01-01]]
     }
 
     daily_count_2 = %{
@@ -122,7 +121,7 @@ defmodule DataDailyCountTest do
       count: case_data[tomorrow]
     }
 
-    # Insert daily count from the day before yestereday
+    # Insert daily count from a past date
     changeset1 = Data.DailyCount.changeset(%Data.DailyCount{}, daily_count_1)
     {status1, _ret} = Data.Repo.insert(changeset1)
 
@@ -130,7 +129,7 @@ defmodule DataDailyCountTest do
     changeset2 = Data.DailyCount.changeset(%Data.DailyCount{}, daily_count_2)
     {status2, _ret} = Data.Repo.insert(changeset2)
 
-    #Inserting day-before-yesterday's data should be OK
+    #Inserting a past date's data should be OK
     assert status1 == :ok
 
     #Inserting tomorrow's (i.e. nonexistent) data should give an error
@@ -138,18 +137,17 @@ defmodule DataDailyCountTest do
   end
 
   test "insert real COVID-19 vaccine data" do
-    # Create daily count
+    # Create daily counts
 
     vaccine_data = CovidVaccines.process_covid_vaccines()
 
     today = Date.utc_today
-    day_before_yesterday = Date.add(today,-2)
     tomorrow = Date.add(today,1)
 
     daily_count_1 = %{
-      date: day_before_yesterday,
+      date: ~D[2021-01-01],
       label: :covid_cases,
-      count: vaccine_data[day_before_yesterday]
+      count: vaccine_data[~D[2021-01-01]]
     }
 
     daily_count_2 = %{
@@ -158,7 +156,7 @@ defmodule DataDailyCountTest do
       count: vaccine_data[tomorrow]
     }
 
-    # Insert daily count from the day before yestereday
+    # Insert daily count from a past date
     changeset1 = Data.DailyCount.changeset(%Data.DailyCount{}, daily_count_1)
     {status1, _ret} = Data.Repo.insert(changeset1)
 
@@ -166,7 +164,7 @@ defmodule DataDailyCountTest do
     changeset2 = Data.DailyCount.changeset(%Data.DailyCount{}, daily_count_2)
     {status2, _ret} = Data.Repo.insert(changeset2)
 
-    #Inserting day-before-yesterday's data should be OK
+    #Inserting a past date's data should be OK
     assert status1 == :ok
 
     #Inserting tomorrow's (i.e. nonexistent) data should give an error

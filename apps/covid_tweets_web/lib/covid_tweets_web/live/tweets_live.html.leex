@@ -87,17 +87,19 @@
         </div>
       </div>
     </div>
-    <%= case @hashtags.hashtags do %>
-      <% [] -> %>
-      <div class="area">
-        <%= "No hashtags were associated with the given keyword more than once." %>
-      </div>
-      <% _ -> %>
-        <%= for hashtag <- @hashtags.hashtags do %>
-          <div class="area">
-            <%= hashtag %>
-          </div>
-        <% end %>
+    <%= if @hashtags do %>
+      <%= case @hashtags.hashtags do %>
+        <% [] -> %>
+        <div class="area">
+          <%= "No hashtags were associated with the given keyword more than once." %>
+        </div>
+        <% _ -> %>
+          <%= for hashtag <- @hashtags.hashtags do %>
+            <div class="area">
+              <%= hashtag %>
+            </div>
+          <% end %>
+      <% end %>
     <% end %>
   </div>
 </div>

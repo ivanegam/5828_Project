@@ -87,12 +87,12 @@
         </div>
       </div>
     </div>
-    <%= case @hashtags do %>
-      <% nil -> %>
+    <%= case is_nil(@hashtags) do %>
+      <% true -> %>
       <div class="area">
         <%= "No hashtags were associated with the given keyword more than once." %>
       </div>
-      <% _ -> %>
+      <% false -> %>
         <%= for hashtag <- @hashtags.hashtags do %>
           <div class="area">
             <%= hashtag %>

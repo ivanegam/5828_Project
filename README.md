@@ -37,14 +37,14 @@ Team Dysfunctional: Stephane Aroca-Ouellette, Derek Mease, Ivane Gamkrelidze, an
     * [`data_daily_count_test.exs`](apps/data/test/data_daily_count_test.exs): lines 7–102
 
 1. Data persistence; any data store
-   * Heroku Postgres
+   * Heroku Postgres (password-protected; illustrated [here](psql.png))
 
 1. Rest collaboration; internal or API endpoint
     * [`covid_daily_tweets.ex`](apps/covid_daily_tweets/lib/covid_daily_tweets.ex): lines 63–99
     * [`covid_cases.ex`](apps/covid_cases/lib/covid_cases.ex): lines 39–49
 
 1. Product environment
-   * Heroku Pipelines: auto deploys to the staging app, then promoted to the production app
+   * Heroku Pipelines: auto deploys to the staging app, then promoted to the production app (password-protected; illustrated [here](pipeline.png))
 
 1. Integration tests
     * [`data_daily_count_test.exs`](apps/data/test/data_daily_count_test.exs): lines 104–172
@@ -58,7 +58,7 @@ Team Dysfunctional: Stephane Aroca-Ouellette, Derek Mease, Ivane Gamkrelidze, an
     * [GitHub Actions](https://github.com/ivanegam/5828_Project/actions)
 
 1. Production monitoring instrumenting
-    * [Phoenix LiveDashboard](https://shrouded-meadow-88761.herokuapp.com/dashboard/home)
+    * [Phoenix LiveDashboard](https://shrouded-meadow-88761.herokuapp.com/dashboard/home) (password-protected; illustrated [here](livedashboard.png))
 
 1. Acceptance tests
     * [`acceptance_test.exs`](apps/covid_tweets_web/test/covid_tweets_web/acceptance/acceptance_test.exs): lines 18–123 (instructions for running tests on the [wiki](https://github.com/ivanegam/5828_Project/wiki/Testing#acceptance-tests))

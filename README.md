@@ -67,4 +67,4 @@ Team Dysfunctional: Stephane Aroca-Ouellette, Derek Mease, Ivane Gamkrelidze, an
     * [`page_live.ex`](apps/covid_tweets_web/lib/covid_tweets_web/live/page_live.ex): lines 13–63
 
 1. Continuous delivery
-    * Heroku: automatic deploys enabled after CI passing
+    * Heroku: automatic deploys enabled after CI passing (password-protected; illustrated [here](autodeploys.png))

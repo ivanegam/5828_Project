@@ -3,14 +3,17 @@
 
 ### Final project: Covid Tweets
 
-Final project for CSCI 5828. See [project overview](https://github.com/ivanegam/5828_Project/wiki/Project-overview).
-
-Deployed to:
-- Developement: https://protected-refuge-98620.herokuapp.com/
-- Production: https://shrouded-meadow-88761.herokuapp.com/
-
 #### Team information
 Team Dysfunctional: Stephane Aroca-Ouellette, Derek Mease, Ivane Gamkrelidze, and Dalton Wiebold
+
+#### Deliverables
+* [User stories](https://trello.com/b/QtD0CL5f/csci-5828-project-team-dysfunction)
+* [Wiki documentation](https://github.com/ivanegam/5828_Project/wiki/Project-overview)
+* [Burndown charts](https://github.com/ivanegam/5828_Project/wiki/Iteration-planning)
+* [Progress summary](https://github.com/ivanegam/5828_Project/wiki/Progress-summary)
+* Prototype
+    * Developement: https://protected-refuge-98620.herokuapp.com/
+    * Production: https://shrouded-meadow-88761.herokuapp.com/
 
 #### Project rubric
 
@@ -58,7 +61,7 @@ Team Dysfunctional: Stephane Aroca-Ouellette, Derek Mease, Ivane Gamkrelidze, an
     * [Phoenix LiveDashboard](https://shrouded-meadow-88761.herokuapp.com/dashboard/home)
 
 1. Acceptance tests
-    * [`acceptance_test.exs`](apps/covid_tweets_web/test/covid_tweets_web/acceptance/acceptance_test.exs) (instructions for running tests on [Project Wiki](https://github.com/ivanegam/5828_Project/wiki/Testing#acceptance-tests))
+    * [`acceptance_test.exs`](apps/covid_tweets_web/test/covid_tweets_web/acceptance/acceptance_test.exs): lines 18–123 (instructions for running tests on the [wiki](https://github.com/ivanegam/5828_Project/wiki/Testing#acceptance-tests))
 
 1. Event collaboration messaging
     * [`page_live.ex`](apps/covid_tweets_web/lib/covid_tweets_web/live/page_live.ex): lines 13–63

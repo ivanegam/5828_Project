@@ -14,6 +14,7 @@ Team Dysfunctional: Stephane Aroca-Ouellette, Derek Mease, Ivane Gamkrelidze, an
 * Prototype
     * Developement: https://protected-refuge-98620.herokuapp.com/
     * Production: https://shrouded-meadow-88761.herokuapp.com/
+* [Project presentation](https://docs.google.com/presentation/d/1YHdtUbxjbzf_pvAHLn7JDnSwTFtGWrYbW0kEa4sKkAk/edit?usp=sharing)
 
 #### Project rubric
 
